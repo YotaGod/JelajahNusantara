@@ -93,6 +93,25 @@ export async function getDestinations({ page, search, category, city, price }: D
   }
 }
 
+export async function getDestinationsMap() {
+  const { data, error } = await supabase
+    .from('destinations')
+    .select(`
+      id, name, latitude, longitude, category_id, avg_rating,
+      category:categories(name),
+      city:cities(name),
+      photos(image_url, is_primary)
+    `)
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
+
+  if (error) {
+    console.error('Error fetching map destinations:', error)
+    return []
+  }
+  return data || []
+}
+
 export async function getDestinationDetail(id: string) {
   const { data, error } = await supabase
     .from('destinations')

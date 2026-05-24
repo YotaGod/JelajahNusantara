@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { getAdminDestinations, deleteDestination, saveDestination, uploadImageToImgBB } from '@/lib/adminApi'
+import { getAdminDestinations, deleteDestination, saveDestination } from '@/lib/adminApi'
+import { extractCoordinatesFromMapUrl } from '@/app/actions/geo'
+import { uploadImageToImgBB } from '@/lib/adminApi' // Separate import or same line
 import { getUserProfile, getCategories, getCities } from '@/lib/api'
 import { Search, Plus, Edit2, Trash2, X, Upload } from 'lucide-react'
 
@@ -141,6 +143,17 @@ export default function AdminDestinations() {
     try {
       const facArray = facilities.split(',').map(s => s.trim()).filter(s => s.length > 0)
       
+      // Ekstrak koordinat dari map_url secara otomatis via Server Action
+      let latitude = null;
+      let longitude = null;
+      if (formData.map_url) {
+        const coords = await extractCoordinatesFromMapUrl(formData.map_url);
+        if (coords) {
+          latitude = coords.lat;
+          longitude = coords.lng;
+        }
+      }
+
       const payload = {
         name: formData.name,
         category_id: formData.category_id,
@@ -148,6 +161,8 @@ export default function AdminDestinations() {
         description: formData.description,
         address: formData.address,
         map_url: formData.map_url || null,
+        latitude: latitude,
+        longitude: longitude,
         price: formData.price ? parseInt(formData.price) : null,
         open_hours: formData.open_hours,
         contact: formData.contact,

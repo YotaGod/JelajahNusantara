@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense, useEffect } from 'react'
+import { useState, Suspense } from 'react'
 import { login } from './actions'
 import { AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
@@ -11,15 +11,11 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const errorQuery = searchParams.get('error')
   
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [errorMsg, setErrorMsg] = useState<string | null>(
+    errorQuery === 'AuthCallbackError' ? 'Gagal memproses login. Silakan coba lagi.' : null
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
-
-  useEffect(() => {
-    if (errorQuery === 'AuthCallbackError') {
-      setErrorMsg('Gagal memproses login. Silakan coba lagi.')
-    }
-  }, [errorQuery])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -32,8 +28,8 @@ function LoginForm() {
       if (result?.error) {
         setErrorMsg(result.error)
       }
-    } catch (err: any) {
-      if (err.message !== 'NEXT_REDIRECT') {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message !== 'NEXT_REDIRECT') {
         setErrorMsg('Terjadi kesalahan yang tidak terduga.')
       }
     } finally {
@@ -59,7 +55,7 @@ function LoginForm() {
         setIsGoogleLoading(false)
       }
       // If successful, the browser will automatically redirect to Google
-    } catch (err: any) {
+    } catch {
       setErrorMsg('Gagal terhubung dengan Google.')
       setIsGoogleLoading(false)
     }

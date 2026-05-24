@@ -30,6 +30,8 @@ CREATE TABLE public.destinations (
     description TEXT,
     address TEXT,
     map_url TEXT,
+    latitude FLOAT8,
+    longitude FLOAT8,
     price INTEGER,
     open_hours TEXT,
     contact TEXT,

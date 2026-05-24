@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
 import styles from './Header.module.css'
-import { LogOut, User, LayoutDashboard } from 'lucide-react'
+import { LogOut, User, LayoutDashboard, Map } from 'lucide-react'
 
 export default async function Header() {
   const supabase = await createClient()
@@ -32,6 +32,11 @@ export default async function Header() {
         </Link>
 
         <nav className={styles.nav}>
+          <Link href="/map" className="btn btn-ghost" style={{ padding: 'var(--spacing-2) var(--spacing-3)' }}>
+            <Map size={18} />
+            <span className="hidden-mobile">Peta Wisata</span>
+          </Link>
+          
           {user ? (
             <div className={styles.userMenu}>
               {isAdmin && (

@@ -1,0 +1,125 @@
+/* src/components/map/map.css */
+.mapWrapper {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 80px); /* Kurangi tinggi header */
+  background: var(--color-bg-alt);
+}
+
+.mapContainer {
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Supaya di bawah sidebar/filter */
+}
+
+/* Sidebar Filter (Melayang di atas peta) */
+.mapSidebar {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 320px;
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 1.5rem;
+  z-index: 1000; /* Di atas leaflet controls */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--color-border);
+  transition: transform 0.3s ease;
+}
+
+.mapSidebar h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  color: var(--color-text);
+}
+
+.sidebarGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebarGroup label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* Custom Popup Styles */
+.leaflet-popup-content-wrapper {
+  background: var(--color-card);
+  color: var(--color-text);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.leaflet-popup-tip {
+  background: var(--color-card);
+}
+
+.custom-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 200px;
+}
+
+.custom-popup h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-tosca-main);
+}
+
+.custom-popup .badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  background: var(--color-tosca-light);
+  color: var(--color-tosca-dark);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.custom-popup .rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.custom-popup .btn-detail {
+  display: block;
+  text-align: center;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--color-tosca-main);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.custom-popup .btn-detail:hover {
+  opacity: 0.9;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .mapSidebar {
+    top: auto;
+    bottom: 20px;
+    right: 50%;
+    transform: translateX(50%);
+    width: 90%;
+    max-width: 400px;
+    max-height: 40vh;
+    overflow-y: auto;
+  }
+}
