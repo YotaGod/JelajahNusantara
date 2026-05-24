@@ -5,7 +5,7 @@ import { createClient } from '@/utils/supabase/client'
 import { getUserProfile } from '@/lib/api'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Map as MapIcon, Users, AlertTriangle, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Map as MapIcon, Users, AlertTriangle, LogOut, Menu, X, FolderPlus } from 'lucide-react'
 import './admin.css'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -102,6 +102,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <AlertTriangle size={20} />
             Kelola Laporan
           </Link>
+
+          <Link 
+            href="/admin/proposals" 
+            className={`menuItem ${pathname.startsWith('/admin/proposals') ? 'menuItemActive' : ''}`}
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <FolderPlus size={20} />
+            Pengajuan Data
+          </Link>
         </nav>
 
         <div className="sidebarFooter">
@@ -122,7 +131,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span>
               {pathname === '/admin' ? 'Dashboard Summary' : 
                pathname.startsWith('/admin/destinations') ? 'Destinasi' : 
-               pathname.startsWith('/admin/users') ? 'Pengguna' : 'Laporan'}
+               pathname.startsWith('/admin/users') ? 'Pengguna' : 
+               pathname.startsWith('/admin/proposals') ? 'Pengajuan Data' : 'Laporan'}
             </span>
           </div>
 

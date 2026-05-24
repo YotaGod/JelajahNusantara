@@ -18,13 +18,13 @@ export async function getIslands() {
 }
 
 export async function getCategories() {
-  const { data, error } = await supabase.from('categories').select('id, name').order('name')
+  const { data, error } = await supabase.from('categories').select('id, name').eq('status', 'approved').order('name')
   if (error) throw error
   return data
 }
 
 export async function getCities(islandId?: string) {
-  let query = supabase.from('cities').select('id, name, island_id').order('name')
+  let query = supabase.from('cities').select('id, name, island_id').eq('status', 'approved').order('name')
   if (islandId) {
     query = query.eq('island_id', islandId)
   }

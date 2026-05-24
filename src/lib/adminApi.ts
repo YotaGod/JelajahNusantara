@@ -175,7 +175,7 @@ export async function getAdminUsers(page: number, search: string, roleFilter: st
     .from('user_profiles')
     .select(`
       *,
-      city:cities(name)
+      city:cities!region_city_id(name)
     `, { count: 'exact' })
     .range(offset, offset + ITEMS_PER_PAGE - 1)
     .order('created_at', { ascending: false })
@@ -360,6 +360,39 @@ export async function getAdminChartData(adminRole: string, regionCityId: string 
     usersByCityData,
     destsByCityData
   }
+}
+
+// === Proposals API ===
+
+export async function getAdminCategories() {
+  const { data, error } = await supabase.from('categories').select('*').order('name')
+  if (error) throw error
+  return data
+}
+
+export async function getAdminCities() {
+  const { data, error } = await supabase.from('cities').select('*, island:islands(name)').order('name')
+  if (error) throw error
+  return data
+}
+
+export async function addCategory(name: string, status: string) {
+  const { data, error } = await supabase.from('categories').insert({ name, status }).select().single()
+  if (error) throw error
+  return data
+}
+
+export async function addCity(name: string, province: string, islandId: string | null, status: string) {
+  const { data, error } = await supabase.from('cities').insert({ name, province, island_id: islandId, status }).select().single()
+  if (error) throw error
+  return data
+}
+
+export async function updateProposalStatus(type: 'category' | 'city', id: string, status: string) {
+  const table = type === 'category' ? 'categories' : 'cities'
+  const { error } = await supabase.from(table).update({ status }).eq('id', id)
+  if (error) throw error
+  return true
 }
 
 
