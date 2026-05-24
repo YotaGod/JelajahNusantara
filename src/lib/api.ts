@@ -150,8 +150,9 @@ export async function getUserFavoriteIds() {
     const { data, error } = await supabase
       .from('destinations')
       .select(`
-        id, name, city_id, avg_rating,
+        id, name, city_id, avg_rating, price,
         city:cities(name),
+        category:categories(name),
         photos(image_url, is_primary)
       `)
       .eq('city_id', cityId)
@@ -453,4 +454,10 @@ export async function getUserFavorites(userId: string) {
       primaryPhoto
     }
   }) || []
+}
+
+export async function deleteOwnAccount() {
+  const { error } = await supabase.rpc('delete_own_account')
+  if (error) throw error
+  return true
 }

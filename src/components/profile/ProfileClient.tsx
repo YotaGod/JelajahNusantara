@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getUserProfile, getUserStats, getUserFavorites, getCities, updateUserHomeCity } from '@/lib/api'
+import { getUserProfile, getUserStats, getUserFavorites, getCities, updateUserHomeCity, deleteOwnAccount } from '@/lib/api'
 import { User, Mail, Shield, Calendar, Star, Heart, MessageSquare, LogOut, Edit, MapPin } from 'lucide-react'
 import DestinationCard from '@/components/home/DestinationCard'
 import { useFavorites } from '@/hooks/useFavorites'
 import Link from 'next/link'
+import { createClient } from '@/utils/supabase/client'
 import styles from './Profile.module.css'
 
 export default function ProfileClient({ userId, email }: { userId: string, email: string }) {
@@ -52,6 +53,19 @@ export default function ProfileClient({ userId, email }: { userId: string, email
       alert('Gagal menyimpan daerah.')
     }
     setIsSavingCity(false)
+  }
+
+  const handleDeleteAccount = async () => {
+    if (!confirm('PERINGATAN: Apakah Anda yakin ingin menghapus akun Anda secara permanen? Semua data ulasan, favorit, dan laporan Anda akan ikut terhapus. Tindakan ini tidak dapat dibatalkan.')) return
+    
+    try {
+      await deleteOwnAccount()
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      window.location.href = '/'
+    } catch (e: any) {
+      alert(`Gagal menghapus akun: ${e.message || 'Terjadi kesalahan'}`)
+    }
   }
 
   if (isProfileLoading) {
@@ -151,6 +165,25 @@ export default function ProfileClient({ userId, email }: { userId: string, email
                 <LogOut size={18} /> Logout
               </button>
             </form>
+
+            {profileRole === 'user' && (
+              <button 
+                onClick={handleDeleteAccount}
+                className="btn" 
+                style={{ 
+                  width: '100%', 
+                  marginTop: 'var(--spacing-2)', 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  gap: 'var(--spacing-2)',
+                  backgroundColor: 'transparent',
+                  color: 'var(--color-error)',
+                  border: '1px solid var(--color-error)'
+                }}
+              >
+                Hapus Akun
+              </button>
+            )}
           </div>
         </div>
 
