@@ -2,37 +2,56 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { getAdminDashboardStats } from '@/lib/adminApi'
+import { getAdminDashboardStats, getAdminChartData } from '@/lib/adminApi'
 import { getUserProfile } from '@/lib/api'
 import Link from 'next/link'
 import { Map, Users, AlertTriangle, Star } from 'lucide-react'
+import DashboardCharts from '@/components/admin/DashboardCharts'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<any>(null)
+  const [chartData, setChartData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000), // 7 days ago
+    endDate: new Date()
+  })
+  
   const supabase = createClient()
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
+      setIsLoading(true)
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         const profile = await getUserProfile(user.id)
         if (profile) {
           try {
-            const data = await getAdminDashboardStats(profile.role, profile.region_city_id)
-            setStats(data)
+            const [statsData, chartsData] = await Promise.all([
+              getAdminDashboardStats(profile.role, profile.region_city_id),
+              getAdminChartData(profile.role, profile.region_city_id, dateRange.startDate, dateRange.endDate)
+            ])
+            setStats(statsData)
+            setChartData(chartsData)
           } catch (error) {
-            console.error("Failed to fetch stats", error)
+            console.error("Failed to fetch dashboard data", error)
           }
         }
       }
       setIsLoading(false)
     }
-    fetchStats()
-  }, [])
+    fetchData()
+  }, [dateRange])
 
-  if (isLoading) return <div>Memuat data...</div>
+  if (isLoading && !stats) return <div>Memuat data...</div>
   if (!stats) return <div>Gagal memuat statistik.</div>
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'startDate' | 'endDate') => {
+    const newDate = new Date(e.target.value)
+    if (!isNaN(newDate.getTime())) {
+      setDateRange(prev => ({ ...prev, [field]: newDate }))
+    }
+  }
 
   return (
     <div className="animate-fade-in">
@@ -80,13 +99,34 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="tableContainer" style={{ padding: 'var(--spacing-6)' }}>
-        <h3 style={{ marginBottom: 'var(--spacing-4)' }}>Selamat Datang di Dashboard Admin</h3>
-        <p style={{ color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
-          Gunakan menu di sebelah kiri untuk mengelola destinasi, melihat laporan pengunjung, dan mengatur pengguna. 
-          {stats.totalUsers === 0 ? ' Sebagai Regional Admin, Anda hanya memiliki akses terbatas pada destinasi di wilayah yang telah ditetapkan.' : ' Sebagai Super Admin, Anda memiliki kontrol penuh atas seluruh sistem.'}
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--spacing-8)', marginBottom: 'var(--spacing-2)' }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>Visualisasi Data</h2>
+        <div style={{ display: 'flex', gap: 'var(--spacing-4)', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
+            <label style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>Mulai:</label>
+            <input 
+              type="date" 
+              className="input-field" 
+              style={{ padding: 'var(--spacing-2)', minHeight: 'auto' }}
+              value={dateRange.startDate.toISOString().split('T')[0]} 
+              onChange={e => handleDateChange(e, 'startDate')}
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
+            <label style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>Sampai:</label>
+            <input 
+              type="date" 
+              className="input-field" 
+              style={{ padding: 'var(--spacing-2)', minHeight: 'auto' }}
+              value={dateRange.endDate.toISOString().split('T')[0]} 
+              onChange={e => handleDateChange(e, 'endDate')}
+            />
+          </div>
+        </div>
       </div>
+
+      <DashboardCharts data={chartData} />
+
     </div>
   )
 }

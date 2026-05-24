@@ -250,3 +250,79 @@ export async function updateReportStatus(reportId: string, status: string, resol
   if (error) throw error
   return true
 }
+
+// Dashboard Charts
+export async function getAdminChartData(adminRole: string, regionCityId: string | null, startDate: Date, endDate: Date) {
+  const startIso = startDate.toISOString()
+  const endIso = endDate.toISOString()
+
+  let reportsQuery = supabase.from('reports').select('id, created_at, status, destination:destinations!inner(city:cities(name))').gte('created_at', startIso).lte('created_at', endIso)
+  let destQuery = supabase.from('destinations').select('id, category:categories(name)')
+
+  if (adminRole === 'regional_admin' && regionCityId) {
+    reportsQuery = reportsQuery.eq('destination.city_id', regionCityId)
+    destQuery = destQuery.eq('city_id', regionCityId)
+  }
+
+  const [{ data: reports }, { data: destinations }] = await Promise.all([
+    reportsQuery,
+    destQuery
+  ])
+
+  // 1. Process Reports by Date and City
+  const reportsByDate: Record<string, Record<string, number>> = {}
+  const cityNames = new Set<string>()
+
+  // Pre-fill days between start and end date to ensure continuous line chart
+  let curr = new Date(startDate)
+  curr.setHours(0,0,0,0)
+  const end = new Date(endDate)
+  end.setHours(23,59,59,999)
+  
+  while (curr <= end) {
+    const dateStr = curr.toISOString().split('T')[0]
+    reportsByDate[dateStr] = { date: dateStr as any }
+    curr.setDate(curr.getDate() + 1)
+  }
+
+  reports?.forEach((r: any) => {
+    const dateStr = new Date(r.created_at).toISOString().split('T')[0]
+    const cityName = r.destination?.city?.name || 'Unknown'
+    cityNames.add(cityName)
+    if (reportsByDate[dateStr]) {
+      reportsByDate[dateStr][cityName] = (reportsByDate[dateStr][cityName] || 0) + 1
+    }
+  })
+
+  const reportsChartData = Object.values(reportsByDate).sort((a, b) => (a.date as string).localeCompare(b.date as string))
+
+  // 2. Process Report Statuses
+  const statusCounts: Record<string, number> = { pending: 0, investigasi: 0, selesai: 0, ditolak: 0 }
+  reports?.forEach((r: any) => {
+    const stat = r.status || 'pending'
+    statusCounts[stat] = (statusCounts[stat] || 0) + 1
+  })
+  const statusChartData = Object.keys(statusCounts).map(key => ({
+    name: key.charAt(0).toUpperCase() + key.slice(1),
+    value: statusCounts[key]
+  })).filter(item => item.value > 0)
+
+  // 3. Process Destinations by Category
+  const categoryCounts: Record<string, number> = {}
+  destinations?.forEach((d: any) => {
+    const catName = d.category?.name || 'Lainnya'
+    categoryCounts[catName] = (categoryCounts[catName] || 0) + 1
+  })
+  const categoryChartData = Object.keys(categoryCounts).map(key => ({
+    name: key,
+    value: categoryCounts[key]
+  }))
+
+  return {
+    reportsChartData,
+    cities: Array.from(cityNames),
+    statusChartData,
+    categoryChartData
+  }
+}
+
