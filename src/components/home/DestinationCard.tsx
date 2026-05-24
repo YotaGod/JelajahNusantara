@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { MapPin, Star } from 'lucide-react'
 import styles from './DestinationCard.module.css'
+import FavoriteButton from '@/components/ui/FavoriteButton'
 
 interface DestinationProps {
   id: string
@@ -31,6 +32,9 @@ export default function DestinationCard({ dest }: { dest: DestinationProps }) {
           <div className={styles.imagePlaceholder}>No Image</div>
         )}
         <span className={styles.categoryBadge}>{dest.categoryName}</span>
+        <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 10 }}>
+          <FavoriteButton destinationId={dest.id} />
+        </div>
       </div>
       <div className={styles.content}>
         <div className={styles.header}>

@@ -1,8 +1,8 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getDestinationDetail, checkFavorite, toggleFavorite, submitReport, getUserProfile } from '@/lib/api'
-import { ArrowLeft, Star, MapPin, Map, Clock, Phone, Heart, AlertTriangle, X } from 'lucide-react'
+import { getDestinationDetail, submitReport, getUserProfile } from '@/lib/api'
+import { ArrowLeft, Star, MapPin, Map, Clock, Phone, AlertTriangle, X } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import styles from './DestinationDetailClient.module.css'
@@ -10,11 +10,13 @@ import reviewStyles from './Reviews.module.css'
 import ReviewList from './ReviewList'
 import ReviewForm from './ReviewForm'
 import StarRating from './StarRating'
+import FavoriteButton from '@/components/ui/FavoriteButton'
+import { useToast } from '@/components/ui/ToastProvider'
 
 export default function DestinationDetailClient({ destinationId, userId }: { destinationId: string, userId: string | null }) {
   const queryClient = useQueryClient()
+  const { addToast } = useToast()
   const [mainImage, setMainImage] = useState<string>('')
-  const [toastMessage, setToastMessage] = useState<string | null>(null)
   
   // Report Modal State
   const [isReportOpen, setIsReportOpen] = useState(false)
@@ -27,12 +29,6 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
   const { data: dest, isLoading, isError } = useQuery({
     queryKey: ['destination', destinationId],
     queryFn: () => getDestinationDetail(destinationId),
-  })
-
-  const { data: isFav } = useQuery({
-    queryKey: ['favorite', destinationId, userId],
-    queryFn: () => checkFavorite(destinationId, userId!),
-    enabled: !!userId,
   })
 
   const { data: userProfile } = useQuery({
@@ -48,31 +44,15 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
     }
   }, [dest])
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg)
-    setTimeout(() => setToastMessage(null), 3000)
-  }
-
-  const favoriteMutation = useMutation({
-    mutationFn: (currentFavStatus: boolean) => toggleFavorite(destinationId, userId!, currentFavStatus),
-    onSuccess: (newStatus) => {
-      queryClient.setQueryData(['favorite', destinationId, userId], newStatus)
-      showToast(newStatus ? 'Berhasil ditambahkan ke Favorit!' : 'Dihapus dari Favorit.')
-    },
-    onError: () => {
-      showToast('Gagal mengubah status favorit.')
-    }
-  })
-
   const reportMutation = useMutation({
     mutationFn: () => submitReport(destinationId, userId!, reportType, reportDesc),
     onSuccess: () => {
       setIsReportOpen(false)
       setReportDesc('')
-      showToast('Laporan berhasil dikirim. Terima kasih!')
+      addToast('Laporan berhasil dikirim. Terima kasih!', 'success')
     },
     onError: () => {
-      showToast('Gagal mengirim laporan.')
+      addToast('Gagal mengirim laporan.', 'error')
     }
   })
 
@@ -152,17 +132,11 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
               </div>
             </div>
             <div className={styles.actionButtons}>
-              <button 
-                className={`${styles.favoriteBtn} ${isFav ? styles.active : ''}`}
-                onClick={() => {
-                  if (!userId) return showToast('Silakan login untuk menyimpan favorit.')
-                  favoriteMutation.mutate(!!isFav)
-                }}
-                disabled={favoriteMutation.isPending}
-                title={isFav ? 'Hapus Favorit' : 'Tambah Favorit'}
-              >
-                <Heart size={24} fill={isFav ? 'currentColor' : 'none'} />
-              </button>
+              <FavoriteButton 
+                destinationId={destinationId} 
+                size={24} 
+                style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }} 
+              />
             </div>
           </div>
 
@@ -284,7 +258,7 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
                 className="btn btn-ghost" 
                 style={{ width: '100%', color: 'var(--color-error)' }}
                 onClick={() => {
-                  if (!userId) return showToast('Silakan login untuk melaporkan destinasi.')
+                  if (!userId) return addToast('Silakan login untuk melaporkan destinasi.', 'error')
                   setIsReportOpen(true)
                 }}
               >
@@ -335,13 +309,6 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
               </button>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className={styles.toast}>
-          {toastMessage}
         </div>
       )}
     </div>

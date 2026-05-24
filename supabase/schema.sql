@@ -65,7 +65,8 @@ CREATE TABLE public.favorites (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES public.user_profiles(id) ON DELETE CASCADE,
     destination_id UUID REFERENCES public.destinations(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ DEFAULT now()
+    created_at TIMESTAMPTZ DEFAULT now(),
+    UNIQUE(user_id, destination_id)
 );
 
 CREATE TABLE public.reports (

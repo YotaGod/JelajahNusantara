@@ -106,10 +106,86 @@ export async function getDestinationsMap() {
     .not('longitude', 'is', null)
 
   if (error) {
-    console.error('Error fetching map destinations:', error)
+    console.error('Error fetching destination detail:', error)
+    return null
+  }
+  return data
+}
+
+// === Favorites API ===
+
+export async function getUserFavoriteIds() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return []
+
+  const { data, error } = await supabase
+    .from('favorites')
+    .select('destination_id')
+    .eq('user_id', session.user.id)
+
+  if (error) {
+    console.error('Error fetching favorites:', error)
     return []
   }
-  return data || []
+  return data.map(f => f.destination_id)
+}
+
+export async function toggleUserFavorite(destinationId: string, isCurrentlyFavorited: boolean) {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) throw new Error('User not logged in')
+
+  if (isCurrentlyFavorited) {
+    const { error } = await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', session.user.id)
+      .eq('destination_id', destinationId)
+    if (error) throw error
+    return false
+  } else {
+    const { error } = await supabase
+      .from('favorites')
+      .insert({ user_id: session.user.id, destination_id: destinationId })
+    if (error) throw error
+    return true
+  }
+}
+
+export async function getFavoriteDestinations() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return []
+
+  const { data, error } = await supabase
+    .from('favorites')
+    .select(`
+      destination_id,
+      destinations (
+        id, name, price, avg_rating,
+        category:categories(name),
+        city:cities(name),
+        photos(*)
+      )
+    `)
+    .eq('user_id', session.user.id)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching favorite destinations:', error)
+    return []
+  }
+
+  // Transform data
+  return data
+    .filter(f => f.destinations) // pastikan destinasi masih ada
+    .map((f: any) => ({
+      id: f.destinations.id,
+      name: f.destinations.name,
+      price: f.destinations.price,
+      avg_rating: f.destinations.avg_rating,
+      categoryName: f.destinations.category?.name || '',
+      cityName: f.destinations.city?.name || '',
+      primaryPhoto: f.destinations.photos?.find((p: any) => p.is_primary)?.image_url || f.destinations.photos?.[0]?.image_url || null
+    }))
 }
 
 export async function getDestinationDetail(id: string) {

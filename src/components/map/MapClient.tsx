@@ -9,6 +9,8 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet.markercluster'
 import MapSidebar from './MapSidebar'
 import './map.css'
+import { useFavorites } from '@/hooks/useFavorites'
+import { useRouter } from 'next/navigation'
 
 // Perbaikan path icon default Leaflet di Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -33,6 +35,36 @@ export default function MapClient({ destinations, categories, cities }: MapClien
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedCity, setSelectedCity] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+
+  const { isFavorite, toggleFavorite, isLoggedIn } = useFavorites()
+  const router = useRouter()
+
+  // Event listener untuk tombol favorit di popup
+  useEffect(() => {
+    const mapEl = mapRef.current
+    if (!mapEl) return
+
+    const handleMapClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      const favBtn = target.closest('.fav-toggle-btn')
+      if (favBtn) {
+        e.preventDefault()
+        e.stopPropagation()
+        if (!isLoggedIn) {
+          router.push('/login')
+          return
+        }
+        const destId = favBtn.getAttribute('data-id')
+        const isFavStr = favBtn.getAttribute('data-isfav') === 'true'
+        if (destId) {
+          toggleFavorite({ destinationId: destId, isFavorited: isFavStr })
+        }
+      }
+    }
+
+    mapEl.addEventListener('click', handleMapClick)
+    return () => mapEl.removeEventListener('click', handleMapClick)
+  }, [isLoggedIn, toggleFavorite, router])
 
   // Inisialisasi Peta
   useEffect(() => {
@@ -95,9 +127,23 @@ export default function MapClient({ destinations, categories, cities }: MapClien
         
         const photoUrl = dest.photos?.[0]?.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=300'
         
+        const isFav = isFavorite(dest.id)
+        const heartColor = isFav ? '#ef4444' : '#94A3B8'
+        const heartFill = isFav ? '#ef4444' : 'none'
+        const heartSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="${heartFill}" stroke="${heartColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`
+
         const popupContent = `
-          <div class="custom-popup">
-            <h4>${dest.name}</h4>
+          <div class="custom-popup" style="position: relative;">
+            <button 
+              class="fav-toggle-btn" 
+              data-id="${dest.id}" 
+              data-isfav="${isFav}"
+              style="position: absolute; top: 0; right: 0; background: none; border: none; cursor: pointer; padding: 0;"
+              title="${isFav ? 'Hapus dari favorit' : 'Tambah ke favorit'}"
+            >
+              ${heartSvg}
+            </button>
+            <h4 style="padding-right: 28px;">${dest.name}</h4>
             <span class="badge">${dest.category?.name || 'Wisata'}</span>
             <div class="rating">⭐ ${dest.avg_rating > 0 ? dest.avg_rating.toFixed(1) : 'Baru'}</div>
             <img src="${photoUrl}" alt="${dest.name}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-top: 5px;" />
@@ -120,7 +166,7 @@ export default function MapClient({ destinations, categories, cities }: MapClien
       mapInstanceRef.current.setView([-6.4, 106.0], 9);
     }
 
-  }, [destinations, selectedCategory, selectedCity, searchQuery, cities])
+  }, [destinations, selectedCategory, selectedCity, searchQuery, cities, isFavorite])
 
   const handleReset = () => {
     setSelectedCategory('')

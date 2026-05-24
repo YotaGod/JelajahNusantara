@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 import { getUserProfile, getUserStats, getUserFavorites } from '@/lib/api'
 import { User, Mail, Shield, Calendar, Star, Heart, MessageSquare, LogOut, Edit } from 'lucide-react'
 import DestinationCard from '@/components/home/DestinationCard'
+import { useFavorites } from '@/hooks/useFavorites'
+import Link from 'next/link'
 import styles from './Profile.module.css'
 
 export default function ProfileClient({ userId, email }: { userId: string, email: string }) {
@@ -21,6 +23,9 @@ export default function ProfileClient({ userId, email }: { userId: string, email
     queryKey: ['profile-favorites', userId],
     queryFn: () => getUserFavorites(userId),
   })
+
+  const { favoriteIds } = useFavorites()
+  const displayFavorites = favorites?.filter((dest: any) => favoriteIds.includes(dest.id)) || []
 
   if (isProfileLoading) {
     return <div className="container grid" style={{ placeItems: 'center', minHeight: '50vh' }}><h3>Loading profil...</h3></div>
@@ -113,7 +118,7 @@ export default function ProfileClient({ userId, email }: { userId: string, email
                 <Heart size={24} />
               </div>
               <div className={styles.statInfo}>
-                <span className={styles.statValue}>{isStatsLoading ? '-' : stats?.favorites}</span>
+                <span className={styles.statValue}>{isStatsLoading ? '-' : favoriteIds.length}</span>
                 <span className={styles.statLabel}>Favorit</span>
               </div>
             </div>
@@ -131,12 +136,9 @@ export default function ProfileClient({ userId, email }: { userId: string, email
           {/* Favorites List */}
           <div className={styles.sectionHeader}>
             <h3>Destinasi Favorit Saya</h3>
-            <button 
-              className="btn btn-ghost" 
-              onClick={() => alert("Halaman khusus Lihat Semua Favorit segera hadir.")}
-            >
+            <Link href="/favorites" className="btn btn-ghost">
               Lihat Semua
-            </button>
+            </Link>
           </div>
           
           {isFavsLoading ? (
@@ -145,9 +147,9 @@ export default function ProfileClient({ userId, email }: { userId: string, email
                 <div key={i} className="skeleton" style={{ height: '300px' }} />
               ))}
             </div>
-          ) : favorites && favorites.length > 0 ? (
+          ) : displayFavorites && displayFavorites.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 'var(--spacing-4)' }}>
-              {favorites.map((dest: any) => (
+              {displayFavorites.map((dest: any) => (
                 <DestinationCard key={dest.id} dest={dest} />
               ))}
             </div>
