@@ -42,13 +42,27 @@ export default function NearbyRecommendations() {
         <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Rekomendasi di Dekat Anda</h2>
       </div>
       <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-6)' }}>
-        Destinasi dengan rating terbaik di wilayah {nearbyDestinations[0]?.city?.name}
+        Destinasi dengan rating terbaik di wilayah {((nearbyDestinations[0]?.city as any)?.name || (nearbyDestinations[0]?.city as any)?.[0]?.name) || 'Anda'}
       </p>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" style={{ gap: 'var(--spacing-6)' }}>
-        {nearbyDestinations.map(dest => (
-          <DestinationCard key={dest.id} dest={dest} />
-        ))}
+        {nearbyDestinations.map((dest: any) => {
+          const categoryName = Array.isArray(dest.category) ? dest.category[0]?.name : dest.category?.name || 'Wisata'
+          const cityName = Array.isArray(dest.city) ? dest.city[0]?.name : dest.city?.name || 'Banten'
+          const primaryPhoto = Array.isArray(dest.photos) ? dest.photos.find((p: any) => p.is_primary)?.image_url || dest.photos[0]?.image_url : dest.photos?.image_url || null
+
+          return (
+            <DestinationCard key={dest.id} dest={{
+              id: dest.id,
+              name: dest.name,
+              avg_rating: dest.avg_rating,
+              price: dest.price || null,
+              categoryName,
+              cityName,
+              primaryPhoto
+            }} />
+          )
+        })}
       </div>
     </div>
   )

@@ -117,7 +117,7 @@ export default function DashboardCharts({ data }: { data: ChartData | null }) {
                     outerRadius={100}
                     fill="#82ca9d"
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   >
                     {categoryChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[(index + 4) % COLORS.length]} />

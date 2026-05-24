@@ -294,7 +294,7 @@ export async function getAdminChartData(adminRole: string, regionCityId: string 
     }
   })
 
-  const reportsChartData = Object.values(reportsByDate).sort((a, b) => (a.date as string).localeCompare(b.date as string))
+  const reportsChartData = Object.values(reportsByDate).sort((a, b) => String(a.date).localeCompare(String(b.date)))
 
   // 2. Process Report Statuses
   const statusCounts: Record<string, number> = { pending: 0, investigasi: 0, selesai: 0, ditolak: 0 }
