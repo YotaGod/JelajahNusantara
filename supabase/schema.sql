@@ -127,6 +127,9 @@ CREATE POLICY "User profiles viewable by owner or super_admin" ON public.user_pr
   FOR SELECT USING (auth.uid() = id OR public.is_super_admin());
 CREATE POLICY "User profiles updateable by owner" ON public.user_profiles
   FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "User profiles updateable by super_admin" ON public.user_profiles
+  FOR UPDATE USING (public.is_super_admin());
+
 
 -- Policies: destinations
 CREATE POLICY "Destinations are viewable by everyone" ON public.destinations FOR SELECT USING (true);
