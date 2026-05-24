@@ -165,7 +165,7 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
           {/* Description */}
           <div className={styles.descriptionSection}>
             <h2>Tentang Destinasi</h2>
-            <div className={styles.descriptionText}>{dest.description || 'Belum ada deskripsi.'}</div>
+            <div className={styles.descriptionText} style={{ textAlign: 'justify' }}>{dest.description || 'Belum ada deskripsi.'}</div>
           </div>
 
           {/* Reviews Section */}

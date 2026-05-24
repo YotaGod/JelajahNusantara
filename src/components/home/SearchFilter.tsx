@@ -7,9 +7,11 @@ import { useState, useEffect } from 'react'
 
 interface SearchFilterProps {
   categories: any[]
+  islands: any[]
   cities: any[]
   initialSearch: string
   initialCategory: string
+  initialIsland: string
   initialCity: string
   initialPrice: string
   onFilterChange: (key: string, value: string) => void
@@ -18,9 +20,11 @@ interface SearchFilterProps {
 
 export default function SearchFilter({
   categories,
+  islands,
   cities,
   initialSearch,
   initialCategory,
+  initialIsland,
   initialCity,
   initialPrice,
   onFilterChange,
@@ -80,6 +84,24 @@ export default function SearchFilter({
               <option value="">Semua Kategori</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.filterGroup}>
+            <label className="label">Pulau</label>
+            <select
+              className="input-field"
+              value={initialIsland}
+              onChange={(e) => {
+                onFilterChange('island', e.target.value)
+                onFilterChange('city', '') // reset city when island changes
+              }}
+              suppressHydrationWarning
+            >
+              <option value="">Semua Pulau</option>
+              {islands.map((i) => (
+                <option key={i.id} value={i.id}>{i.name}</option>
               ))}
             </select>
           </div>

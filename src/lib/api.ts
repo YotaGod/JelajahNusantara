@@ -6,8 +6,15 @@ export type DestinationParams = {
   page: number
   search: string
   category: string
+  island?: string
   city: string
   price: string
+}
+
+export async function getIslands() {
+  const { data, error } = await supabase.from('islands').select('id, name').order('name')
+  if (error) throw error
+  return data
 }
 
 export async function getCategories() {
@@ -16,13 +23,17 @@ export async function getCategories() {
   return data
 }
 
-export async function getCities() {
-  const { data, error } = await supabase.from('cities').select('id, name').eq('province', 'Banten').order('name')
+export async function getCities(islandId?: string) {
+  let query = supabase.from('cities').select('id, name, island_id').order('name')
+  if (islandId) {
+    query = query.eq('island_id', islandId)
+  }
+  const { data, error } = await query
   if (error) throw error
   return data
 }
 
-export async function getDestinations({ page, search, category, city, price }: DestinationParams) {
+export async function getDestinations({ page, search, category, island, city, price }: DestinationParams) {
   const ITEMS_PER_PAGE = 9
   const offset = (page - 1) * ITEMS_PER_PAGE
 
@@ -38,7 +49,7 @@ export async function getDestinations({ page, search, category, city, price }: D
       avg_rating,
       favorite_count,
       category:categories(id, name),
-      city:cities(id, name),
+      city:cities!inner(id, name, island_id),
       photos(image_url, is_primary)
     `, { count: 'exact' })
     .range(offset, offset + ITEMS_PER_PAGE - 1)
@@ -49,14 +60,9 @@ export async function getDestinations({ page, search, category, city, price }: D
     query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`)
   }
 
-  if (category) {
-    query = query.eq('category_id', category)
-  }
-
-  if (city) {
-    query = query.eq('city_id', city)
-  }
-
+  if (category) query = query.eq('category_id', category)
+  if (island) query = query.eq('city.island_id', island)
+  if (city) query = query.eq('city_id', city)
   if (price) {
     if (price === 'free') {
       query = query.is('price', null)

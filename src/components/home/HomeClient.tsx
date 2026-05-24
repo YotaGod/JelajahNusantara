@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { getDestinations, getCategories, getCities } from '@/lib/api'
+import { getDestinations, getCategories, getCities, getIslands } from '@/lib/api'
 import Hero from './Hero'
 import NearbyRecommendations from './NearbyRecommendations'
 import SearchFilter from './SearchFilter'
@@ -17,6 +17,7 @@ export default function HomeClient() {
   const page = Number(searchParams.get('page')) || 1
   const search = searchParams.get('search') || ''
   const category = searchParams.get('category') || ''
+  const island = searchParams.get('island') || ''
   const city = searchParams.get('city') || ''
   const price = searchParams.get('price') || ''
 
@@ -25,14 +26,19 @@ export default function HomeClient() {
     queryFn: getCategories,
   })
 
+  const { data: islands = [] } = useQuery({
+    queryKey: ['islands'],
+    queryFn: getIslands,
+  })
+
   const { data: cities = [] } = useQuery({
-    queryKey: ['cities'],
-    queryFn: getCities,
+    queryKey: ['cities', island],
+    queryFn: () => getCities(island),
   })
 
   const { data: destinationsData, isLoading, isError } = useQuery({
-    queryKey: ['destinations', page, search, category, city, price],
-    queryFn: () => getDestinations({ page, search, category, city, price }),
+    queryKey: ['destinations', page, search, category, island, city, price],
+    queryFn: () => getDestinations({ page, search, category, island, city, price }),
     placeholderData: (previousData) => previousData, // keep previous data while fetching
   })
 
@@ -75,9 +81,11 @@ export default function HomeClient() {
       <div className="container">
         <SearchFilter
           categories={categories}
+          islands={islands}
           cities={cities}
           initialSearch={search}
           initialCategory={category}
+          initialIsland={island}
           initialCity={city}
           initialPrice={price}
           onFilterChange={handleFilterChange}
