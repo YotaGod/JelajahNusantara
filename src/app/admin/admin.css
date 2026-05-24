@@ -462,3 +462,17 @@
     display: block;
   }
 }
+
+.adminControls {
+  display: flex;
+  gap: var(--spacing-3);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.adminControlInput {
+  flex: 1 1 200px;
+  min-width: 0;
+  width: 100% !important;
+}
+

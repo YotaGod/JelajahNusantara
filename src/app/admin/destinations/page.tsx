@@ -194,8 +194,8 @@ export default function AdminDestinations() {
   return (
     <div>
       <div className="tableHeader" style={{ backgroundColor: 'transparent', padding: '0 0 var(--spacing-4) 0', border: 'none' }}>
-        <div className="filterGroup" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ position: 'relative', flex: '1 1 200px' }}>
+        <div className="adminControls">
+          <div className="adminControlInput" style={{ position: 'relative' }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--color-text-muted)' }} />
             <input 
               type="text" 
@@ -206,18 +206,22 @@ export default function AdminDestinations() {
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <select className="input-field" style={{ flex: '1 1 200px' }} value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
+          <select className="input-field adminControlInput" value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
             <option value="">Semua Kategori</option>
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
           {profile?.role === 'super_admin' && (
-            <select className="input-field" style={{ flex: '1 1 200px' }} value={filterCity} onChange={e => setFilterCity(e.target.value)}>
+            <select className="input-field adminControlInput" value={filterCity} onChange={e => setFilterCity(e.target.value)}>
               <option value="">Semua Kota</option>
               {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           )}
+          <div style={{ flexShrink: 0 }}>
+            <button className="btn btn-primary" onClick={() => openModal()} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <Plus size={18} /> Destinasi Baru
+            </button>
+          </div>
         </div>
-        <button className="btn btn-primary" onClick={() => openModal()}><Plus size={18}/> Tambah Destinasi</button>
       </div>
 
       <div className="tableContainer">

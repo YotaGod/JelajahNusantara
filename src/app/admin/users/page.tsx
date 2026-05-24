@@ -69,19 +69,19 @@ export default function AdminUsers() {
   return (
     <div>
       <div className="tableHeader" style={{ backgroundColor: 'transparent', padding: '0 0 var(--spacing-4) 0', border: 'none' }}>
-        <div className="filterGroup" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ position: 'relative' }}>
+        <div className="adminControls">
+          <div className="adminControlInput" style={{ position: 'relative' }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--color-text-muted)' }} />
             <input 
               type="text" 
               className="input-field" 
               placeholder="Cari nama pengguna..." 
-              style={{ paddingLeft: '36px', width: '250px' }}
+              style={{ paddingLeft: '36px', width: '100%' }}
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <select className="input-field" style={{ width: 'auto', minWidth: '180px' }} value={filterRole} onChange={e => setFilterRole(e.target.value)}>
+          <select className="input-field adminControlInput" value={filterRole} onChange={e => setFilterRole(e.target.value)}>
             <option value="">Semua Role</option>
             <option value="super_admin">Super Admin</option>
             <option value="regional_admin">Regional Admin</option>
@@ -113,8 +113,8 @@ export default function AdminUsers() {
                   <tr key={u.id}>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--color-tosca-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
-                          {u.avatar_url ? <img src={u.avatar_url} alt="" style={{width:'100%',height:'100%',borderRadius:'50%'}}/> : u.full_name.charAt(0).toUpperCase()}
+                        <div style={{ width: '32px', height: '32px', minWidth: '32px', flexShrink: 0, borderRadius: '50%', backgroundColor: 'var(--color-tosca-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+                          {u.avatar_url ? <img src={u.avatar_url} alt="" style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover'}}/> : u.full_name.charAt(0).toUpperCase()}
                         </div>
                         <span style={{ fontWeight: 500 }}>{u.full_name}</span>
                       </div>

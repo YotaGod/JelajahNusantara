@@ -80,8 +80,8 @@ export default function AdminReports() {
   return (
     <div>
       <div className="tableHeader" style={{ backgroundColor: 'transparent', padding: '0 0 var(--spacing-4) 0', border: 'none', justifyContent: 'flex-start' }}>
-        <div className="filterGroup" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <select className="input-field" style={{ width: 'auto', minWidth: '180px' }} value={filterStatus} onChange={e => { setFilterStatus(e.target.value); setPage(1); }}>
+        <div className="adminControls">
+          <select className="input-field adminControlInput" value={filterStatus} onChange={e => { setFilterStatus(e.target.value); setPage(1); }}>
             <option value="">Semua Status</option>
             <option value="pending">Menunggu Tindakan</option>
             <option value="resolved">Telah Diselesaikan</option>
