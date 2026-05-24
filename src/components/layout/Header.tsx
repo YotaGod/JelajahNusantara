@@ -40,15 +40,14 @@ export default async function Header() {
           {user ? (
             <div className={styles.userMenu}>
               {isAdmin && (
-                <Link href="/admin" className="btn btn-ghost" style={{ padding: 'var(--spacing-2) var(--spacing-3)' }}>
-                  <LayoutDashboard size={18} />
-                  <span className="hidden-mobile">Dashboard Admin</span>
+                <Link href="/admin" className="btn btn-ghost" style={{ padding: 'var(--spacing-2) var(--spacing-3)' }} title="Dashboard Admin">
+                  <LayoutDashboard size={20} />
                 </Link>
               )}
               
               <Link href="/profile" className={styles.userName}>
                 <User size={18} />
-                <span className="hidden-mobile">{user.user_metadata?.full_name || user.email}</span>
+                <span className="hidden-mobile">{profile?.full_name || user.email?.split('@')[0]}</span>
               </Link>
               
               <form action="/auth/signout" method="post">
