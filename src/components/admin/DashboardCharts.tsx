@@ -7,12 +7,12 @@ import {
 } from 'recharts'
 
 type ChartData = {
-  reportsChartData: any[]
+  reportsChartData: Record<string, string | number>[]
   cities: string[]
-  statusChartData: any[]
-  categoryChartData: any[]
-  usersByCityData?: any[]
-  destsByCityData?: any[]
+  statusChartData: { name: string; value: number }[]
+  categoryChartData: { name: string; value: number }[]
+  usersByCityData?: { name: string; users: number }[]
+  destsByCityData?: { name: string; destinations: number }[]
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c']
@@ -21,6 +21,7 @@ export default function DashboardCharts({ data }: { data: ChartData | null }) {
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true)
   }, [])
 
@@ -39,7 +40,7 @@ export default function DashboardCharts({ data }: { data: ChartData | null }) {
       
       {/* Line Chart: Reports Trend */}
       <div className="tableContainer" style={{ padding: 'var(--spacing-6)' }}>
-        <h3 style={{ marginBottom: 'var(--spacing-4)' }}>Tren Laporan Harian (Per Daerah)</h3>
+        <h3 style={{ marginBottom: 'var(--spacing-4)' }}>Tren Laporan Harian</h3>
         {reportsChartData.length > 0 ? (
           <div style={{ width: '100%', height: 350 }}>
             <ResponsiveContainer width="100%" height="100%">
