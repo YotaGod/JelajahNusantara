@@ -8,10 +8,10 @@ import { Check, X, Plus, Tag, MapPin } from 'lucide-react'
 
 export default function AdminProposals() {
   const [activeTab, setActiveTab] = useState<'categories' | 'cities'>('categories')
-  const [categories, setCategories] = useState<any[]>([])
-  const [cities, setCities] = useState<any[]>([])
-  const [islands, setIslands] = useState<any[]>([])
-  const [profile, setProfile] = useState<any>(null)
+  const [categories, setCategories] = useState<{id:string, name:string, status:string}[]>([])
+  const [cities, setCities] = useState<{id:string, name:string, province:string, status:string, island?:{name:string}}[]>([])
+  const [islands, setIslands] = useState<{id:string, name:string}[]>([])
+  const [profile, setProfile] = useState<{role:string} | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   // Modal State
@@ -113,7 +113,7 @@ export default function AdminProposals() {
           </tr>
         </thead>
         <tbody>
-          {categories.map((c: any) => (
+          {categories.map((c: {id:string, name:string, status:string}) => (
             <tr key={c.id}>
               <td>{c.name}</td>
               <td>
@@ -152,7 +152,7 @@ export default function AdminProposals() {
           </tr>
         </thead>
         <tbody>
-          {cities.map((c: any) => (
+          {cities.map((c: {id:string, name:string, province:string, status:string, island?:{name:string}}) => (
             <tr key={c.id}>
               <td>{c.name}</td>
               <td>{c.province || '-'}</td>

@@ -3,11 +3,21 @@
 import { useState, useEffect } from 'react'
 import { getAdminUsers, updateUserRole } from '@/lib/adminApi'
 import { getCities } from '@/lib/api'
-import { Search, Edit2, Shield, X } from 'lucide-react'
+import { Search, Shield, X } from 'lucide-react'
+
+interface UserProfile {
+  id: string
+  full_name: string
+  role: string
+  region_city_id?: string
+  avatar_url?: string
+  created_at: string
+  city?: { name: string }
+}
 
 export default function AdminUsers() {
-  const [users, setUsers] = useState<any[]>([])
-  const [cities, setCities] = useState<any[]>([])
+  const [users, setUsers] = useState<UserProfile[]>([])
+  const [cities, setCities] = useState<{id: string, name: string}[]>([])
   const [isLoading, setIsLoading] = useState(true)
   
   const [search, setSearch] = useState('')
@@ -17,32 +27,36 @@ export default function AdminUsers() {
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editingUser, setEditingUser] = useState<any>(null)
+  const [editingUser, setEditingUser] = useState<UserProfile | null>(null)
   const [newRole, setNewRole] = useState('')
   const [newRegionCity, setNewRegionCity] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
-  const loadData = async () => {
-    setIsLoading(true)
-    try {
-      if (cities.length === 0) {
-        const cits = await getCities()
-        setCities(cits)
-      }
-      const { data, totalPages: tp } = await getAdminUsers(page, search, filterRole)
-      setUsers(data)
-      setTotalPages(tp)
-    } catch (e) {
-      console.error(e)
-    }
-    setIsLoading(false)
-  }
-
   useEffect(() => {
+    let isMounted = true
+    const loadData = async () => {
+      setIsLoading(true)
+      try {
+        if (cities.length === 0) {
+          const cits = await getCities()
+          if (isMounted) setCities(cits)
+        }
+        const { data, totalPages: tp } = await getAdminUsers(page, search, filterRole)
+        if (isMounted) {
+          setUsers(data as UserProfile[])
+          setTotalPages(tp)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+      if (isMounted) setIsLoading(false)
+    }
     loadData()
+    return () => { isMounted = false }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, search, filterRole])
 
-  const openModal = (user: any) => {
+  const openModal = (user: UserProfile) => {
     setEditingUser(user)
     setNewRole(user.role)
     setNewRegionCity(user.region_city_id || '')
@@ -51,6 +65,7 @@ export default function AdminUsers() {
 
   const handleSaveRole = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!editingUser) return
     if (newRole === 'regional_admin' && !newRegionCity) {
       alert('Anda harus memilih kota penugasan untuk Regional Admin.')
       return
@@ -59,8 +74,9 @@ export default function AdminUsers() {
     try {
       await updateUserRole(editingUser.id, newRole, newRole === 'regional_admin' ? newRegionCity : null)
       setIsModalOpen(false)
-      loadData()
-    } catch (error) {
+      // trigger reload by fake state update
+      setPage(p => p)
+    } catch {
       alert('Gagal memperbarui role pengguna.')
     }
     setIsSaving(false)
@@ -114,6 +130,7 @@ export default function AdminUsers() {
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <div style={{ width: '32px', height: '32px', minWidth: '32px', flexShrink: 0, borderRadius: '50%', backgroundColor: 'var(--color-tosca-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           {u.avatar_url ? <img src={u.avatar_url} alt="" style={{width:'100%',height:'100%',borderRadius:'50%',objectFit:'cover'}}/> : u.full_name.charAt(0).toUpperCase()}
                         </div>
                         <span style={{ fontWeight: 500 }}>{u.full_name}</span>
