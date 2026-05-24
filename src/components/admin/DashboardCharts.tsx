@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell
+  PieChart, Pie, Cell, BarChart, Bar
 } from 'recharts'
 
 type ChartData = {
@@ -11,6 +11,8 @@ type ChartData = {
   cities: string[]
   statusChartData: any[]
   categoryChartData: any[]
+  usersByCityData?: any[]
+  destsByCityData?: any[]
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c']
@@ -30,7 +32,7 @@ export default function DashboardCharts({ data }: { data: ChartData | null }) {
     )
   }
 
-  const { reportsChartData, cities, statusChartData, categoryChartData } = data
+  const { reportsChartData, cities, statusChartData, categoryChartData, usersByCityData, destsByCityData } = data
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-6)', marginTop: 'var(--spacing-6)' }}>
@@ -132,6 +134,64 @@ export default function DashboardCharts({ data }: { data: ChartData | null }) {
             </div>
           ) : (
             <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: '2rem' }}>Tidak ada data destinasi.</p>
+          )}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-6)' }}>
+        {/* Bar Chart: Users by City */}
+        <div className="tableContainer" style={{ padding: 'var(--spacing-6)' }}>
+          <h3 style={{ marginBottom: 'var(--spacing-4)' }}>Pengguna Terbanyak Menurut Daerah</h3>
+          {usersByCityData && usersByCityData.length > 0 ? (
+            <div style={{ width: '100%', height: 300 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={usersByCityData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                  <XAxis dataKey="name" stroke="var(--color-text-muted)" tick={{ fill: 'var(--color-text-muted)' }} />
+                  <YAxis allowDecimals={false} stroke="var(--color-text-muted)" tick={{ fill: 'var(--color-text-muted)' }} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
+                    itemStyle={{ color: 'var(--color-text)' }}
+                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                  />
+                  <Bar dataKey="users" fill="#8884d8" name="Jumlah Pengguna">
+                    {usersByCityData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: '2rem' }}>Tidak ada data pengguna per daerah.</p>
+          )}
+        </div>
+
+        {/* Bar Chart: Destinations by City */}
+        <div className="tableContainer" style={{ padding: 'var(--spacing-6)' }}>
+          <h3 style={{ marginBottom: 'var(--spacing-4)' }}>Jumlah Wisata Menurut Daerah</h3>
+          {destsByCityData && destsByCityData.length > 0 ? (
+            <div style={{ width: '100%', height: 300 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={destsByCityData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                  <XAxis dataKey="name" stroke="var(--color-text-muted)" tick={{ fill: 'var(--color-text-muted)' }} />
+                  <YAxis allowDecimals={false} stroke="var(--color-text-muted)" tick={{ fill: 'var(--color-text-muted)' }} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)', color: 'var(--color-text)' }}
+                    itemStyle={{ color: 'var(--color-text)' }}
+                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                  />
+                  <Bar dataKey="destinations" fill="#82ca9d" name="Jumlah Wisata">
+                    {destsByCityData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[(index + 3) % COLORS.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: '2rem' }}>Tidak ada data wisata per daerah.</p>
           )}
         </div>
       </div>

@@ -259,14 +259,23 @@ export async function getAdminChartData(adminRole: string, regionCityId: string 
   let reportsQuery = supabase.from('reports').select('id, created_at, status, destination:destinations!inner(city:cities(name))').gte('created_at', startIso).lte('created_at', endIso)
   let destQuery = supabase.from('destinations').select('id, category:categories(name)')
 
+  let destCityQuery = supabase.from('destinations').select('id, city:cities(name)')
+  let usersCityQuery = supabase.from('user_profiles').select('id, home_city_id')
+  let citiesQuery = supabase.from('cities').select('id, name')
+
   if (adminRole === 'regional_admin' && regionCityId) {
     reportsQuery = reportsQuery.eq('destination.city_id', regionCityId)
     destQuery = destQuery.eq('city_id', regionCityId)
+    destCityQuery = destCityQuery.eq('city_id', regionCityId)
+    usersCityQuery = usersCityQuery.eq('home_city_id', regionCityId)
   }
 
-  const [{ data: reports }, { data: destinations }] = await Promise.all([
+  const [{ data: reports }, { data: destinations }, { data: destCity }, { data: usersCity }, { data: citiesData }] = await Promise.all([
     reportsQuery,
-    destQuery
+    destQuery,
+    destCityQuery,
+    usersCityQuery,
+    citiesQuery
   ])
 
   // 1. Process Reports by Date and City
@@ -318,11 +327,39 @@ export async function getAdminChartData(adminRole: string, regionCityId: string 
     value: categoryCounts[key]
   }))
 
+  // 4. Process Users by Home City
+  const cityMap = new Map((citiesData || []).map((c: any) => [c.id, c.name]))
+  const userCityCounts: Record<string, number> = {}
+  usersCity?.forEach((u: any) => {
+    if (u.home_city_id) {
+      const cName = cityMap.get(u.home_city_id) || 'Unknown'
+      userCityCounts[cName] = (userCityCounts[cName] || 0) + 1
+    }
+  })
+  const usersByCityData = Object.keys(userCityCounts).map(key => ({
+    name: key,
+    users: userCityCounts[key]
+  })).sort((a, b) => b.users - a.users) // Sort descending
+
+  // 5. Process Destinations by City
+  const destCityCounts: Record<string, number> = {}
+  destCity?.forEach((d: any) => {
+    const cName = d.city?.name || 'Unknown'
+    destCityCounts[cName] = (destCityCounts[cName] || 0) + 1
+  })
+  const destsByCityData = Object.keys(destCityCounts).map(key => ({
+    name: key,
+    destinations: destCityCounts[key]
+  })).sort((a, b) => b.destinations - a.destinations) // Sort descending
+
   return {
     reportsChartData,
     cities: Array.from(cityNames),
     statusChartData,
-    categoryChartData
+    categoryChartData,
+    usersByCityData,
+    destsByCityData
   }
 }
+
 
