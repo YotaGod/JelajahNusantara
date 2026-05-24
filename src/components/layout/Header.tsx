@@ -47,7 +47,7 @@ export default async function Header() {
               
               <Link href="/profile" className={styles.userName}>
                 <User size={18} />
-                <span className="hidden-mobile">{profile?.full_name || user.email?.split('@')[0]}</span>
+                <span className="hidden-mobile">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
               </Link>
               
               <form action="/auth/signout" method="post">

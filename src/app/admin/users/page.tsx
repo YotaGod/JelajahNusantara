@@ -11,7 +11,7 @@ export default function AdminUsers() {
   const [isLoading, setIsLoading] = useState(true)
   
   const [search, setSearch] = useState('')
-  const [filterRole, setFilterRole] = useState('')
+  const [filterRole, setFilterRole] = useState('regional_admin')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
