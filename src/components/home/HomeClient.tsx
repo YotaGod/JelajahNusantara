@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getDestinations, getCategories, getCities } from '@/lib/api'
 import Hero from './Hero'
+import NearbyRecommendations from './NearbyRecommendations'
 import SearchFilter from './SearchFilter'
 import DestinationCard from './DestinationCard'
 import Pagination from './Pagination'
@@ -70,6 +71,7 @@ export default function HomeClient() {
   return (
     <>
       <Hero />
+      <NearbyRecommendations />
       <div className="container">
         <SearchFilter
           categories={categories}

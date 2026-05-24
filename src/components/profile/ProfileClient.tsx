@@ -1,8 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getUserProfile, getUserStats, getUserFavorites } from '@/lib/api'
-import { User, Mail, Shield, Calendar, Star, Heart, MessageSquare, LogOut, Edit } from 'lucide-react'
+import { getUserProfile, getUserStats, getUserFavorites, getCities, updateUserHomeCity } from '@/lib/api'
+import { User, Mail, Shield, Calendar, Star, Heart, MessageSquare, LogOut, Edit, MapPin } from 'lucide-react'
 import DestinationCard from '@/components/home/DestinationCard'
 import { useFavorites } from '@/hooks/useFavorites'
 import Link from 'next/link'
@@ -26,6 +27,32 @@ export default function ProfileClient({ userId, email }: { userId: string, email
 
   const { favoriteIds } = useFavorites()
   const displayFavorites = favorites?.filter((dest: any) => favoriteIds.includes(dest.id)) || []
+
+  const [cities, setCities] = useState<any[]>([])
+  const [selectedCity, setSelectedCity] = useState('')
+  const [isSavingCity, setIsSavingCity] = useState(false)
+
+  useEffect(() => {
+    getCities().then(data => setCities(data || []))
+  }, [])
+
+  useEffect(() => {
+    if (profile?.home_city_id) {
+      setSelectedCity(profile.home_city_id)
+    }
+  }, [profile])
+
+  const handleSaveCity = async () => {
+    if (!selectedCity) return
+    setIsSavingCity(true)
+    try {
+      await updateUserHomeCity(userId, selectedCity)
+      alert('Daerah tempat tinggal berhasil disimpan!')
+    } catch (e) {
+      alert('Gagal menyimpan daerah.')
+    }
+    setIsSavingCity(false)
+  }
 
   if (isProfileLoading) {
     return <div className="container grid" style={{ placeItems: 'center', minHeight: '50vh' }}><h3>Loading profil...</h3></div>
@@ -90,6 +117,33 @@ export default function ProfileClient({ userId, email }: { userId: string, email
                 <Calendar size={16} className={styles.infoIcon} />
                 <span>Bergabung {joinDate}</span>
               </div>
+            </div>
+
+            <div style={{ marginTop: 'var(--spacing-4)', width: '100%' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.875rem', fontWeight: 600, marginBottom: '8px' }}>
+                <MapPin size={14} /> Daerah Tempat Tinggal
+              </label>
+              <select 
+                className="input-field" 
+                style={{ width: '100%', marginBottom: '8px' }}
+                value={selectedCity}
+                onChange={e => setSelectedCity(e.target.value)}
+              >
+                <option value="">-- Pilih Kota/Kab --</option>
+                {cities.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              {selectedCity !== profile?.home_city_id && selectedCity !== '' && (
+                <button 
+                  className="btn btn-primary" 
+                  style={{ width: '100%', fontSize: '0.875rem', padding: '6px' }}
+                  onClick={handleSaveCity}
+                  disabled={isSavingCity}
+                >
+                  {isSavingCity ? 'Menyimpan...' : 'Simpan Daerah'}
+                </button>
+              )}
             </div>
 
             <form action="/auth/signout" method="post" style={{ width: '100%', marginTop: 'var(--spacing-6)' }}>

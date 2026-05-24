@@ -36,12 +36,14 @@ export async function getDestinations({ page, search, category, city, price }: D
       description, 
       price, 
       avg_rating,
+      favorite_count,
       category:categories(id, name),
       city:cities(id, name),
       photos(image_url, is_primary)
     `, { count: 'exact' })
     .range(offset, offset + ITEMS_PER_PAGE - 1)
-    .order('created_at', { ascending: false })
+    .order('favorite_count', { ascending: false })
+    .order('avg_rating', { ascending: false, nullsFirst: false })
 
   if (search) {
     query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`)
@@ -129,6 +131,39 @@ export async function getUserFavoriteIds() {
   }
   return data.map(f => f.destination_id)
 }
+
+  // === User Location Recommendations ===
+
+  export async function updateUserHomeCity(userId: string, cityId: string) {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .update({ home_city_id: cityId })
+      .eq('id', userId)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
+  export async function getNearbyDestinations(cityId: string) {
+    const { data, error } = await supabase
+      .from('destinations')
+      .select(`
+        id, name, city_id, avg_rating,
+        city:cities(name),
+        photos(image_url, is_primary)
+      `)
+      .eq('city_id', cityId)
+      .order('avg_rating', { ascending: false, nullsFirst: false })
+      .limit(3)
+
+    if (error) {
+      console.error('Error fetching nearby destinations:', error)
+      return []
+    }
+    return data
+  }
 
 export async function toggleUserFavorite(destinationId: string, isCurrentlyFavorited: boolean) {
   const { data: { session } } = await supabase.auth.getSession()
@@ -362,12 +397,11 @@ export async function getUserProfile(userId: string) {
     .select('*')
     .eq('id', userId)
     .single()
+    if (error && error.code !== 'PGRST116') throw error
+    return data
+  }
   
-  if (error && error.code !== 'PGRST116') throw error
-  return data
-}
-
-export async function getUserStats(userId: string) {
+  export async function getUserStats(userId: string) {
   const [{ count: reviewsCount }, { count: favoritesCount }, { count: reportsCount }] = await Promise.all([
     supabase.from('reviews').select('*', { count: 'exact', head: true }).eq('user_id', userId),
     supabase.from('favorites').select('*', { count: 'exact', head: true }).eq('user_id', userId),

@@ -13,7 +13,7 @@ export default function ReportsHistoryClient() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
   
-  const { showToast } = useToast()
+  const { addToast } = useToast()
   const queryClient = useQueryClient()
 
   const { data: reports, isLoading } = useQuery({
@@ -24,11 +24,11 @@ export default function ReportsHistoryClient() {
   const cancelMutation = useMutation({
     mutationFn: cancelUserReport,
     onSuccess: () => {
-      showToast('Laporan berhasil dibatalkan', 'success')
+      addToast('Laporan berhasil dibatalkan', 'success')
       queryClient.invalidateQueries({ queryKey: ['user-reports'] })
     },
     onError: (err: any) => {
-      showToast(err.message || 'Gagal membatalkan laporan', 'error')
+      addToast(err.message || 'Gagal membatalkan laporan', 'error')
     }
   })
 
