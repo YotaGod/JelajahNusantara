@@ -234,6 +234,7 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  min-width: 600px; /* Ensure it scrolls on mobile */
 }
 
 .adminTable th, .adminTable td {
@@ -302,7 +303,7 @@
 .modalContent {
   background-color: var(--color-card);
   border-radius: var(--radius-xl);
-  width: 100%;
+  width: calc(100% - var(--spacing-8));
   max-width: 800px;
   max-height: 90vh;
   display: flex;

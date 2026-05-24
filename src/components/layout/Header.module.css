@@ -45,3 +45,13 @@
   font-weight: 500;
   color: var(--color-text);
 }
+
+@media (max-width: 640px) {
+  .nav {
+    gap: var(--spacing-2);
+  }
+  
+  .userMenu {
+    gap: var(--spacing-2);
+  }
+}
