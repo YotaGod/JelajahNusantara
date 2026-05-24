@@ -1,8 +1,8 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getDestinationDetail, submitReport, getUserProfile } from '@/lib/api'
-import { ArrowLeft, Star, MapPin, Map, Clock, Phone, AlertTriangle, X } from 'lucide-react'
+import { getDestinationDetail, submitReport, getUserProfile, getUserReports, cancelUserReport } from '@/lib/api'
+import { ArrowLeft, Star, MapPin, Map, Clock, Phone, AlertTriangle, X, FileWarning } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import styles from './DestinationDetailClient.module.css'
@@ -37,6 +37,27 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
     enabled: !!userId,
   })
 
+  const { data: userReports } = useQuery({
+    queryKey: ['user-reports'],
+    queryFn: getUserReports,
+    enabled: !!userId,
+  })
+
+  const existingReport = userReports?.find((r: any) => r.destination?.id === destinationId)
+  const isPendingReport = existingReport?.status === 'pending'
+
+  const cancelReportMutation = useMutation({
+    mutationFn: cancelUserReport,
+    onSuccess: () => {
+      addToast('Laporan berhasil dibatalkan', 'success')
+      queryClient.invalidateQueries({ queryKey: ['user-reports'] })
+      setIsReportOpen(false)
+    },
+    onError: (error: any) => {
+      addToast(error.message || 'Gagal membatalkan laporan', 'error')
+    }
+  })
+
   useEffect(() => {
     if (dest?.photos && dest.photos.length > 0) {
       const primary = dest.photos.find((p: any) => p.is_primary)
@@ -49,10 +70,11 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
     onSuccess: () => {
       setIsReportOpen(false)
       setReportDesc('')
-      addToast('Laporan berhasil dikirim. Terima kasih!', 'success')
+      addToast('Laporan berhasil dikirim. Terima kasih atas bantuan Anda!', 'success')
+      queryClient.invalidateQueries({ queryKey: ['user-reports'] })
     },
-    onError: () => {
-      addToast('Gagal mengirim laporan.', 'error')
+    onError: (error: any) => {
+      addToast(error.message || 'Gagal mengirim laporan', 'error')
     }
   })
 
@@ -278,35 +300,74 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
               <button className={styles.closeBtn} onClick={() => setIsReportOpen(false)}><X size={20} /></button>
             </div>
             <div className={styles.modalBody}>
-              <div className="filterGroup">
-                <label className="label">Jenis Laporan</label>
-                <select className="input-field" value={reportType} onChange={e => setReportType(e.target.value)}>
-                  <option value="info_salah">Informasi Salah</option>
-                  <option value="tempat_tutup">Tempat Tutup Permanen/Sementara</option>
-                  <option value="harga_berubah">Harga Tiket Berubah</option>
-                  <option value="lainnya">Lainnya</option>
-                </select>
-              </div>
-              <div className="filterGroup">
-                <label className="label">Deskripsi Tambahan</label>
-                <textarea 
-                  className="input-field" 
-                  rows={4} 
-                  placeholder="Jelaskan masalah yang Anda temukan..."
-                  value={reportDesc}
-                  onChange={e => setReportDesc(e.target.value)}
-                ></textarea>
-              </div>
+              {existingReport ? (
+                <div style={{ textAlign: 'center', padding: '1rem' }}>
+                  <FileWarning size={48} color="var(--color-warning)" style={{ margin: '0 auto 1rem' }} />
+                  <h4>Anda telah melaporkan destinasi ini</h4>
+                  <p style={{ color: 'var(--color-text-muted)', marginBottom: '1rem', fontSize: '0.95rem' }}>
+                    Pada tanggal {new Date(existingReport.created_at).toLocaleDateString('id-ID')}<br/>
+                    Status: <strong>{existingReport.status}</strong>
+                  </p>
+                  
+                  {isPendingReport && (
+                    <button 
+                      className="btn btn-outline"
+                      style={{ borderColor: 'var(--color-error)', color: 'var(--color-error)' }}
+                      onClick={() => {
+                        if (confirm('Yakin ingin membatalkan laporan ini?')) {
+                          cancelReportMutation.mutate(existingReport.id)
+                        }
+                      }}
+                      disabled={cancelReportMutation.isPending}
+                    >
+                      {cancelReportMutation.isPending ? 'Membatalkan...' : 'Batalkan Laporan'}
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <div className="filterGroup">
+                    <label className="label">Jenis Laporan</label>
+                    <select className="input-field" value={reportType} onChange={e => setReportType(e.target.value)}>
+                      <option value="info_salah">Informasi Salah</option>
+                      <option value="tempat_tutup">Tempat Tutup Permanen/Sementara</option>
+                      <option value="harga_berubah">Harga Tiket Berubah</option>
+                      <option value="lokasi_salah">Lokasi Tidak Sesuai</option>
+                      <option value="lainnya">Lainnya</option>
+                    </select>
+                  </div>
+                  <div className="filterGroup">
+                    <label className="label">Deskripsi Tambahan <span style={{ color: 'var(--color-error)' }}>*</span></label>
+                    <textarea 
+                      className="input-field" 
+                      rows={4} 
+                      placeholder="Jelaskan masalah yang Anda temukan (min 10 karakter)..."
+                      value={reportDesc}
+                      onChange={e => setReportDesc(e.target.value)}
+                    ></textarea>
+                  </div>
+                  <div className="filterGroup">
+                    <label className="label">Bukti Foto (Opsional)</label>
+                    <div style={{ padding: '12px', border: '1px dashed var(--color-border)', borderRadius: 'var(--radius-md)', textAlign: 'center', color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
+                      Fitur upload foto segera hadir
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
             <div className={styles.modalFooter}>
-              <button className="btn btn-ghost" onClick={() => setIsReportOpen(false)}>Batal</button>
-              <button 
-                className="btn btn-primary" 
-                onClick={() => reportMutation.mutate()}
-                disabled={reportMutation.isPending || !reportDesc.trim()}
-              >
-                {reportMutation.isPending ? 'Mengirim...' : 'Kirim Laporan'}
+              <button className="btn btn-ghost" onClick={() => setIsReportOpen(false)}>
+                {existingReport ? 'Tutup' : 'Batal'}
               </button>
+              {!existingReport && (
+                <button 
+                  className="btn btn-primary" 
+                  onClick={() => reportMutation.mutate()}
+                  disabled={reportMutation.isPending || reportDesc.trim().length < 10}
+                >
+                  {reportMutation.isPending ? 'Mengirim...' : 'Kirim Laporan'}
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { getAdminDashboardStats } from '@/lib/adminApi'
 import { getUserProfile } from '@/lib/api'
+import Link from 'next/link'
 import { Map, Users, AlertTriangle, Star } from 'lucide-react'
 
 export default function AdminDashboard() {
@@ -58,7 +59,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        <div className="statCard">
+        <Link href="/admin/reports" className="statCard" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className="statIcon statIconRed">
             <AlertTriangle size={24} />
           </div>
@@ -66,7 +67,7 @@ export default function AdminDashboard() {
             <h3>Laporan Pending</h3>
             <div className="statValue">{stats.totalReports}</div>
           </div>
-        </div>
+        </Link>
 
         <div className="statCard">
           <div className="statIcon statIconYellow">

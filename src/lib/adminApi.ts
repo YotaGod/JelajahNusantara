@@ -215,7 +215,7 @@ export async function getAdminReports(adminRole: string, regionCityId: string | 
   let query = supabase
     .from('reports')
     .select(`
-      id, issue_type, description, status, created_at,
+      id, issue_type, description, status, created_at, admin_note, photo_url,
       destination:destinations!inner(id, name, city_id),
       reporter:user_profiles!reports_reporter_id_fkey(full_name),
       resolver:user_profiles!reports_resolved_by_fkey(full_name)
@@ -239,11 +239,12 @@ export async function getAdminReports(adminRole: string, regionCityId: string | 
   }
 }
 
-export async function updateReportStatus(reportId: string, status: string, resolverId: string) {
+export async function updateReportStatus(reportId: string, status: string, resolverId: string, adminNote?: string) {
   const { error } = await supabase.from('reports').update({
     status: status,
     resolved_by: resolverId,
-    resolved_at: new Date().toISOString()
+    resolved_at: new Date().toISOString(),
+    admin_note: adminNote
   }).eq('id', reportId)
 
   if (error) throw error

@@ -122,7 +122,7 @@ export default function ProfileClient({ userId, email }: { userId: string, email
                 <span className={styles.statLabel}>Favorit</span>
               </div>
             </div>
-            <div className={styles.statCard}>
+            <Link href="/reports/history" className={styles.statCard} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className={styles.statIcon} style={{ backgroundColor: 'rgba(139, 92, 246, 0.1)', color: '#8b5cf6' }}>
                 <MessageSquare size={24} />
               </div>
@@ -130,7 +130,7 @@ export default function ProfileClient({ userId, email }: { userId: string, email
                 <span className={styles.statValue}>{isStatsLoading ? '-' : stats?.reports}</span>
                 <span className={styles.statLabel}>Laporan</span>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Favorites List */}

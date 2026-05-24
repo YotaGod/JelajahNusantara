@@ -253,7 +253,7 @@ export async function toggleFavorite(destinationId: string, userId: string, isCu
   }
 }
 
-export async function submitReport(destinationId: string, reporterId: string, issueType: string, description: string) {
+export async function submitReport(destinationId: string, reporterId: string, issueType: string, description: string, photoUrl?: string) {
   if (!reporterId) throw new Error("User must be logged in")
   
   const { data, error } = await supabase
@@ -263,6 +263,7 @@ export async function submitReport(destinationId: string, reporterId: string, is
       reporter_id: reporterId,
       issue_type: issueType,
       description: description,
+      photo_url: photoUrl,
       status: 'pending'
     })
     .select()
@@ -270,6 +271,41 @@ export async function submitReport(destinationId: string, reporterId: string, is
 
   if (error) throw error
   return data
+}
+
+export async function getUserReports() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return []
+
+  const { data, error } = await supabase
+    .from('reports')
+    .select(`
+      id, issue_type, description, status, created_at, resolved_at, admin_note,
+      destination:destinations(id, name)
+    `)
+    .eq('reporter_id', session.user.id)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching user reports:', error)
+    return []
+  }
+  return data
+}
+
+export async function cancelUserReport(reportId: string) {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) throw new Error("User not logged in")
+
+  const { error } = await supabase
+    .from('reports')
+    .update({ status: 'cancelled_by_user' })
+    .eq('id', reportId)
+    .eq('reporter_id', session.user.id)
+    .eq('status', 'pending') // Hanya bisa batal jika pending
+
+  if (error) throw error
+  return true
 }
 
 // Phase 5 Functions

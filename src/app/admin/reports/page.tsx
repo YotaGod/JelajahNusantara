@@ -20,6 +20,7 @@ export default function AdminReports() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedReport, setSelectedReport] = useState<any>(null)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [adminNote, setAdminNote] = useState('')
 
   const supabase = createClient()
 
@@ -49,6 +50,7 @@ export default function AdminReports() {
 
   const openDetail = (report: any) => {
     setSelectedReport(report)
+    setAdminNote(report.admin_note || '')
     setIsModalOpen(true)
   }
 
@@ -56,7 +58,7 @@ export default function AdminReports() {
     if (!selectedReport) return
     setIsUpdating(true)
     try {
-      await updateReportStatus(selectedReport.id, status, profile.id)
+      await updateReportStatus(selectedReport.id, status, profile.id, adminNote)
       setIsModalOpen(false)
       loadData()
     } catch (error) {
@@ -84,6 +86,7 @@ export default function AdminReports() {
             <option value="pending">Menunggu Tindakan</option>
             <option value="resolved">Telah Diselesaikan</option>
             <option value="rejected">Ditolak</option>
+            <option value="cancelled_by_user">Dibatalkan User</option>
           </select>
         </div>
       </div>
@@ -119,7 +122,7 @@ export default function AdminReports() {
                     <td>{new Date(r.created_at).toLocaleDateString('id-ID')}</td>
                     <td>
                       <span className={`badge ${r.status}`}>
-                        {r.status === 'pending' ? 'Menunggu' : r.status === 'resolved' ? 'Selesai' : 'Ditolak'}
+                        {r.status === 'pending' ? 'Menunggu' : r.status === 'resolved' ? 'Selesai' : r.status === 'rejected' ? 'Ditolak' : 'Batal'}
                       </span>
                     </td>
                     <td>
@@ -175,8 +178,25 @@ export default function AdminReports() {
                   {selectedReport.description}
                 </div>
               </div>
+
+              <div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>Catatan Internal Admin</div>
+                {selectedReport.status === 'pending' ? (
+                  <textarea 
+                    className="input-field" 
+                    rows={3} 
+                    placeholder="Tambahkan catatan internal (opsional)..."
+                    value={adminNote}
+                    onChange={e => setAdminNote(e.target.value)}
+                  />
+                ) : (
+                  <div style={{ padding: '12px', backgroundColor: 'var(--color-surface)', border: '1px dashed var(--color-border)', borderRadius: '8px', fontSize: '0.875rem', whiteSpace: 'pre-wrap', color: selectedReport.admin_note ? 'inherit' : 'var(--color-text-muted)' }}>
+                    {selectedReport.admin_note || 'Tidak ada catatan.'}
+                  </div>
+                )}
+              </div>
               
-              {selectedReport.status !== 'pending' && (
+              {selectedReport.status !== 'pending' && selectedReport.status !== 'cancelled_by_user' && (
                 <div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>Diselesaikan Oleh</div>
                   <div>{selectedReport.resolver?.full_name}</div>
@@ -184,19 +204,24 @@ export default function AdminReports() {
               )}
             </div>
             
-            <div className="modalFooter">
-              {selectedReport.status === 'pending' ? (
-                <>
-                  <button className="btn btn-ghost" style={{ color: 'var(--color-error)' }} onClick={() => handleUpdateStatus('rejected')} disabled={isUpdating}>
-                    <XCircle size={16} /> Tolak
-                  </button>
-                  <button className="btn btn-primary" onClick={() => handleUpdateStatus('resolved')} disabled={isUpdating}>
-                    <CheckCircle size={16} /> Tandai Selesai
-                  </button>
-                </>
-              ) : (
-                <button className="btn btn-ghost" onClick={() => setIsModalOpen(false)}>Tutup</button>
-              )}
+            <div className="modalFooter" style={{ justifyContent: 'space-between' }}>
+              <Link href={`/admin/destinations?edit=${selectedReport.destination.id}`} className="btn btn-outline" style={{ fontSize: '0.85rem' }}>
+                Edit Destinasi
+              </Link>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {selectedReport.status === 'pending' ? (
+                  <>
+                    <button className="btn btn-ghost" style={{ color: 'var(--color-error)' }} onClick={() => handleUpdateStatus('rejected')} disabled={isUpdating}>
+                      <XCircle size={16} /> Tolak
+                    </button>
+                    <button className="btn btn-primary" onClick={() => handleUpdateStatus('resolved')} disabled={isUpdating}>
+                      <CheckCircle size={16} /> Tandai Selesai
+                    </button>
+                  </>
+                ) : (
+                  <button className="btn btn-ghost" onClick={() => setIsModalOpen(false)}>Tutup</button>
+                )}
+              </div>
             </div>
           </div>
         </div>

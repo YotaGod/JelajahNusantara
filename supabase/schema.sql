@@ -75,8 +75,10 @@ CREATE TABLE public.reports (
     reporter_id UUID REFERENCES public.user_profiles(id) ON DELETE CASCADE,
     issue_type TEXT,
     description TEXT,
-    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'resolved', 'rejected')),
+    photo_url TEXT,
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'resolved', 'rejected', 'cancelled_by_user')),
     resolved_by UUID REFERENCES public.user_profiles(id) ON DELETE SET NULL,
+    admin_note TEXT,
     created_at TIMESTAMPTZ DEFAULT now(),
     resolved_at TIMESTAMPTZ
 );
@@ -165,6 +167,9 @@ CREATE POLICY "Favorites delete by owner" ON public.favorites
   FOR DELETE USING (auth.uid() = user_id);
 
 -- Policies: reports
+CREATE POLICY "Reports viewable by owner" ON public.reports FOR SELECT USING (auth.uid() = reporter_id);
+CREATE POLICY "Reports updateable by owner" ON public.reports FOR UPDATE USING (auth.uid() = reporter_id);
+
 CREATE POLICY "Reports insert by logged in users" ON public.reports
   FOR INSERT WITH CHECK (
     auth.uid() = reporter_id AND 
