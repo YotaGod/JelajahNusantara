@@ -77,8 +77,8 @@ export default function HomeClient() {
   return (
     <>
       <Hero />
-      <NearbyRecommendations />
-      <div className="container">
+      
+      <div className="container" style={{ paddingTop: '2rem' }}>
         <SearchFilter
           categories={categories}
           islands={islands}
@@ -91,6 +91,13 @@ export default function HomeClient() {
           onFilterChange={handleFilterChange}
           onReset={handleReset}
         />
+      </div>
+
+      <NearbyRecommendations />
+
+      <div className="container">
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1.5rem', marginTop: '1rem', color: 'var(--color-primary)' }}>Wisata Lainnya</h2>
+
 
         {isError && (
           <div className="grid" style={{ placeItems: 'center', minHeight: '200px', color: 'var(--color-error)' }}>
