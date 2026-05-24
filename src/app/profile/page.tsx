@@ -1,0 +1,22 @@
+import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
+import ProfileClient from '@/components/profile/ProfileClient'
+
+export const metadata = {
+  title: 'Profil Saya - Wisata Banten',
+  description: 'Kelola profil, favorit, dan ulasan Anda di Wisata Banten.',
+}
+
+export default async function ProfilePage() {
+  const supabase = await createClient()
+  
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
+
+  return <ProfileClient userId={user.id} email={user.email || ''} />
+}

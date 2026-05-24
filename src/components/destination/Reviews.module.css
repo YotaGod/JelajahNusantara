@@ -1,0 +1,239 @@
+/* Reviews.module.css */
+
+.reviewsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  margin-top: var(--spacing-8);
+  padding-top: var(--spacing-8);
+  border-top: 1px solid var(--color-border);
+}
+
+.reviewsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.reviewsHeader h2 {
+  margin: 0;
+}
+
+.reviewsStats {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  background-color: rgba(245, 158, 11, 0.1);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-full);
+}
+
+.avgRating {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-warning);
+}
+
+.totalReviews {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Star Rating */
+.starContainer {
+  display: flex;
+  gap: 2px;
+}
+
+.starInteractive {
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.starInteractive:hover {
+  transform: scale(1.15);
+}
+
+/* Review Form */
+.formCard {
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-border-focus);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.formHeader {
+  margin-bottom: var(--spacing-4);
+}
+
+.formHeader h4 {
+  margin-bottom: var(--spacing-1);
+}
+
+.formHeader p {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.formGroup {
+  margin-bottom: var(--spacing-4);
+}
+
+.formLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-2);
+}
+
+.ratingInput {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.ratingText {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-warning);
+}
+
+.errorText {
+  color: var(--color-error);
+  font-size: 0.875rem;
+  margin-top: var(--spacing-1);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-6);
+}
+
+/* Review List */
+.reviewList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.reviewCard {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5);
+  position: relative;
+  transition: box-shadow var(--transition-fast);
+}
+
+.reviewCard:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.reviewCardOwn {
+  border-left: 4px solid var(--color-tosca-main);
+  background-color: rgba(20, 184, 166, 0.02);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-3);
+}
+
+.reviewUser {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.reviewAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-tosca-light), var(--color-ocean-main));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+  overflow: hidden;
+}
+
+.reviewAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reviewMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewName {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--color-text);
+}
+
+.reviewDate {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.reviewActions {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.actionBtn:hover {
+  background-color: var(--color-bg-alt);
+  color: var(--color-text);
+}
+
+.actionBtn.deleteBtn:hover {
+  color: var(--color-error);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.reviewContent {
+  margin-top: var(--spacing-3);
+}
+
+.reviewComment {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  white-space: pre-wrap;
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-8) 0;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-alt);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--color-border);
+}
