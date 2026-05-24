@@ -19,7 +19,11 @@
 }
 
 .sidebarHeader {
-  padding: var(--spacing-6);
+  height: 80px;
+  padding: 0 var(--spacing-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -85,8 +89,9 @@
 }
 
 .adminHeader {
+  height: 80px;
   background-color: var(--color-card);
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: 0 var(--spacing-6);
   display: flex;
   justify-content: space-between;
   align-items: center;

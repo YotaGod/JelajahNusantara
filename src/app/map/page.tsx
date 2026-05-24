@@ -16,7 +16,7 @@ export default async function MapPage() {
   ])
 
   return (
-    <div style={{ paddingTop: '80px' }}>
+    <div>
       <MapDynamicWrapper 
         destinations={destinations} 
         categories={categories} 

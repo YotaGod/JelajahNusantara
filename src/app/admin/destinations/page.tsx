@@ -65,6 +65,18 @@ export default function AdminDestinations() {
     loadData()
   }, [page, search, filterCategory, filterCity])
 
+  useEffect(() => {
+    // Cek apakah ada parameter 'edit' di URL
+    const urlParams = new URLSearchParams(window.location.search)
+    const editId = urlParams.get('edit')
+    if (editId) {
+      openModal({ id: editId })
+      
+      // Hapus parameter dari URL agar tidak terbuka otomatis saat refresh
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [])
+
   const handleDelete = async (id: string) => {
     if (window.confirm("Yakin ingin menghapus destinasi ini? Semua foto dan ulasan terkait akan hilang.")) {
       await deleteDestination(id)
@@ -183,23 +195,23 @@ export default function AdminDestinations() {
     <div>
       <div className="tableHeader" style={{ backgroundColor: 'transparent', padding: '0 0 var(--spacing-4) 0', border: 'none' }}>
         <div className="filterGroup" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', flex: '1 1 200px' }}>
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '10px', color: 'var(--color-text-muted)' }} />
             <input 
               type="text" 
               className="input-field" 
               placeholder="Cari destinasi..." 
-              style={{ paddingLeft: '36px', width: '250px' }}
+              style={{ paddingLeft: '36px', width: '100%' }}
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <select className="input-field" style={{ width: 'auto', minWidth: '180px' }} value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
+          <select className="input-field" style={{ flex: '1 1 200px' }} value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
             <option value="">Semua Kategori</option>
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
           {profile?.role === 'super_admin' && (
-            <select className="input-field" style={{ width: 'auto', minWidth: '180px' }} value={filterCity} onChange={e => setFilterCity(e.target.value)}>
+            <select className="input-field" style={{ flex: '1 1 200px' }} value={filterCity} onChange={e => setFilterCity(e.target.value)}>
               <option value="">Semua Kota</option>
               {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>

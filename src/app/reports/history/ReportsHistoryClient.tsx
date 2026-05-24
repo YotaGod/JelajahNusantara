@@ -48,6 +48,16 @@ export default function ReportsHistoryClient() {
     }
   }
 
+  const formatIssueType = (type: string) => {
+    const map: Record<string, string> = {
+      'info_salah': 'Informasi Salah',
+      'tempat_tutup': 'Tempat Tutup',
+      'harga_berubah': 'Harga Berubah',
+      'lainnya': 'Lainnya'
+    }
+    return map[type] || type
+  }
+
   if (isLoading) {
     return <div className="container" style={{ padding: 'var(--spacing-16) 0', textAlign: 'center' }}><h3>Memuat riwayat laporan...</h3></div>
   }
@@ -62,7 +72,7 @@ export default function ReportsHistoryClient() {
   const currentData = filteredReports.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   return (
-    <div className="container" style={{ padding: 'var(--spacing-12) 0' }}>
+    <div className="container" style={{ paddingTop: 'var(--spacing-12)', paddingBottom: 'var(--spacing-12)' }}>
       <h1 style={{ marginBottom: 'var(--spacing-8)' }}>Riwayat Laporan</h1>
 
       {reports?.length === 0 ? (
@@ -100,8 +110,8 @@ export default function ReportsHistoryClient() {
             </select>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'var(--color-card)', borderRadius: 'var(--radius-xl)', overflow: 'hidden' }}>
+          <div style={{ overflowX: 'auto', backgroundColor: 'var(--color-card)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)' }}>
+            <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', overflow: 'hidden' }}>
               <thead>
                 <tr style={{ backgroundColor: 'var(--color-surface)', textAlign: 'left', borderBottom: '1px solid var(--color-border)' }}>
                   <th style={{ padding: 'var(--spacing-4)' }}>Destinasi</th>
@@ -120,7 +130,7 @@ export default function ReportsHistoryClient() {
                         {report.destination?.name}
                       </Link>
                     </td>
-                    <td style={{ padding: 'var(--spacing-4)' }}>{report.issue_type}</td>
+                    <td style={{ padding: 'var(--spacing-4)' }}>{formatIssueType(report.issue_type)}</td>
                     <td style={{ padding: 'var(--spacing-4)', maxWidth: '200px' }}>
                       <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {report.description}

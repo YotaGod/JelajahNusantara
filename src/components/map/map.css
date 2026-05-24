@@ -113,13 +113,14 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .mapSidebar {
+    position: fixed;
     top: auto;
     bottom: 20px;
     right: 50%;
     transform: translateX(50%);
     width: 90%;
     max-width: 400px;
-    max-height: 40vh;
-    overflow-y: auto;
+    max-height: none;
+    overflow-y: visible;
   }
 }
