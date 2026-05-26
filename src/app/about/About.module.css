@@ -1,0 +1,97 @@
+.pageContainer {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.heroBackground {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background-color: #0f172a;
+}
+
+.bgImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.darkOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4); /* Dark semi-transparent overlay to ensure text is readable */
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem 4rem 2rem;
+  z-index: 10;
+}
+
+.glassCard {
+  background: rgba(30, 41, 59, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1.5rem;
+  padding: 3rem;
+  max-width: 800px;
+  width: 100%;
+  color: #f8fafc;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+}
+
+.divider {
+  height: 4px;
+  width: 60px;
+  background-color: #14B8A6; /* Primary color */
+  margin: 0 auto 2rem auto;
+  border-radius: 2px;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #cbd5e1;
+  margin-bottom: 1.5rem;
+}
+
+.description:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 6rem 1rem 2rem 1rem;
+  }
+  .glassCard {
+    padding: 2rem 1.5rem;
+  }
+  .title {
+    font-size: 2rem;
+  }
+  .description {
+    font-size: 1rem;
+  }
+}

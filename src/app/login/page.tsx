@@ -2,10 +2,11 @@
 
 import { useState, Suspense } from 'react'
 import { login } from './actions'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Compass } from 'lucide-react'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
 import { useSearchParams } from 'next/navigation'
+import styles from './login.module.css'
 
 function LoginForm() {
   const searchParams = useSearchParams()
@@ -62,42 +63,65 @@ function LoginForm() {
   }
 
   return (
-    <div className="container" style={{ padding: 'var(--spacing-16) 0', maxWidth: '400px' }}>
-      <div style={{ backgroundColor: 'var(--color-card)', padding: 'var(--spacing-8)', borderRadius: 'var(--radius-2xl)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-md)' }}>
-        <h1 style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-6)', textAlign: 'center' }}>
-          Login ke <span className="text-gradient">Wisata Banten</span>
-        </h1>
+    <div className={styles.loginContainer}>
+      <div className={styles.overlay}></div>
+      <div className={styles.loginCard}>
+        <div className={styles.logoArea}>
+          <div className={styles.logoIcon}>
+            <Compass size={28} />
+          </div>
+          <div className={styles.logoText}>Jelajah<br/>Nusantara</div>
+        </div>
         
         {errorMsg && (
-          <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--color-error)', padding: 'var(--spacing-3)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--spacing-4)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-2)', fontSize: '0.875rem' }}>
+          <div className={styles.errorBox}>
             <AlertTriangle size={18} /> {errorMsg}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
-          <div className="filterGroup">
-            <label className="label">Email</label>
-            <input type="email" name="email" className="input-field" placeholder="nama@email.com" required suppressHydrationWarning />
+        <form onSubmit={handleSubmit}>
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Email</label>
+            <input 
+              type="email" 
+              name="email" 
+              className={styles.input} 
+              placeholder="nama@email.com" 
+              required 
+              suppressHydrationWarning 
+            />
           </div>
-          <div className="filterGroup">
-            <label className="label">Password</label>
-            <input type="password" name="password" className="input-field" placeholder="Minimal 6 karakter" required minLength={6} suppressHydrationWarning />
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Password</label>
+            <input 
+              type="password" 
+              name="password" 
+              className={styles.input} 
+              placeholder="Minimal 6 karakter" 
+              required 
+              minLength={6} 
+              suppressHydrationWarning 
+            />
           </div>
-          <button type="submit" className="btn btn-primary" style={{ marginTop: 'var(--spacing-4)' }} disabled={isLoading || isGoogleLoading} suppressHydrationWarning>
-            {isLoading ? 'Loading...' : 'Login dengan Email'}
+          <button 
+            type="submit" 
+            className={styles.primaryBtn} 
+            disabled={isLoading || isGoogleLoading} 
+            suppressHydrationWarning
+          >
+            {isLoading ? 'Loading...' : 'Masuk dengan Email'}
           </button>
         </form>
 
-        <div style={{ margin: 'var(--spacing-6) 0', display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)' }}>
-          <div style={{ height: '1px', backgroundColor: 'var(--color-border)', flexGrow: 1 }}></div>
-          <span style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>atau</span>
-          <div style={{ height: '1px', backgroundColor: 'var(--color-border)', flexGrow: 1 }}></div>
+        <div className={styles.divider}>
+          <div className={styles.line}></div>
+          <span className={styles.dividerText}>atau</span>
+          <div className={styles.line}></div>
         </div>
 
         <button 
           type="button" 
-          className="btn btn-outline" 
-          style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: 'var(--spacing-2)' }} 
+          className={styles.outlineBtn}
           onClick={handleGoogleLogin}
           disabled={isLoading || isGoogleLoading}
           suppressHydrationWarning
@@ -115,8 +139,8 @@ function LoginForm() {
           )}
         </button>
 
-        <div style={{ marginTop: 'var(--spacing-6)', textAlign: 'center', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-          Belum punya akun? <Link href="/register" style={{ color: 'var(--color-tosca-main)', fontWeight: 600 }}>Daftar di sini</Link>
+        <div className={styles.footerText}>
+          Belum punya akun? <Link href="/register" className={styles.link}>Daftar di sini</Link>
         </div>
       </div>
     </div>

@@ -78,63 +78,65 @@ export default function HomeClient() {
     <>
       <Hero />
       
-      <div className="container" style={{ paddingTop: '2rem' }}>
-        <SearchFilter
-          categories={categories}
-          islands={islands}
-          cities={cities}
-          initialSearch={search}
-          initialCategory={category}
-          initialIsland={island}
-          initialCity={city}
-          initialPrice={price}
-          onFilterChange={handleFilterChange}
-          onReset={handleReset}
-        />
-      </div>
+      <div style={{ backgroundColor: '#0f172a', minHeight: '100vh', color: '#f8fafc', paddingBottom: '4rem' }}>
+        <div className="container" style={{ marginTop: '-2.5rem', position: 'relative', zIndex: 10 }}>
+          <SearchFilter
+            categories={categories}
+            islands={islands}
+            cities={cities}
+            initialSearch={search}
+            initialCategory={category}
+            initialIsland={island}
+            initialCity={city}
+            initialPrice={price}
+            onFilterChange={handleFilterChange}
+            onReset={handleReset}
+          />
+        </div>
 
-      <NearbyRecommendations />
+        <NearbyRecommendations />
 
-      <div className="container">
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1.5rem', marginTop: '1rem', color: 'var(--color-primary)' }}>Wisata Lainnya</h2>
+        <div className="container">
+          <h2 className="animate-fade-in-up" style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1.5rem', marginTop: '1rem', color: '#f8fafc' }}>Wisata Lainnya</h2>
 
 
-        {isError && (
-          <div className="grid" style={{ placeItems: 'center', minHeight: '200px', color: 'var(--color-error)' }}>
-            <h3>Terjadi kesalahan saat memuat data.</h3>
-          </div>
-        )}
+          {isError && (
+            <div className="grid" style={{ placeItems: 'center', minHeight: '200px', color: 'var(--color-error)' }}>
+              <h3>Terjadi kesalahan saat memuat data.</h3>
+            </div>
+          )}
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="skeleton" style={{ height: '300px' }} />
-            ))}
-          </div>
-        ) : (
-          <>
-            {destinationsData?.data.length === 0 ? (
-              <div className="grid" style={{ placeItems: 'center', minHeight: '300px', color: 'var(--color-text-muted)' }}>
-                <h2>Tidak ada destinasi yang sesuai dengan filter.</h2>
-                <button className="btn btn-outline" style={{ marginTop: '1rem' }} onClick={handleReset}>
-                  Reset Filter
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                {destinationsData?.data.map((dest: any) => (
-                  <DestinationCard key={dest.id} dest={dest} />
-                ))}
-              </div>
-            )}
-            
-            <Pagination
-              currentPage={page}
-              totalPages={destinationsData?.totalPages || 0}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="skeleton" style={{ height: '300px' }} />
+              ))}
+            </div>
+          ) : (
+            <>
+              {destinationsData?.data.length === 0 ? (
+                <div className="grid" style={{ placeItems: 'center', minHeight: '300px', color: '#94a3b8' }}>
+                  <h2>Tidak ada destinasi yang sesuai dengan filter.</h2>
+                  <button className="btn btn-primary" style={{ marginTop: '1rem' }} onClick={handleReset}>
+                    Reset Filter
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                  {destinationsData?.data.map((dest: any) => (
+                    <DestinationCard key={dest.id} dest={dest} />
+                  ))}
+                </div>
+              )}
+              
+              <Pagination
+                currentPage={page}
+                totalPages={destinationsData?.totalPages || 0}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
+        </div>
       </div>
     </>
   )

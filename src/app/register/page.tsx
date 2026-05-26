@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { signup } from '../login/actions'
-import { AlertTriangle, CheckCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Compass } from 'lucide-react'
 import Link from 'next/link'
+import styles from '../login/login.module.css'
 
 export default function RegisterPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -46,48 +47,82 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="container" style={{ padding: 'var(--spacing-16) 0', maxWidth: '400px' }}>
-      <div style={{ backgroundColor: 'var(--color-card)', padding: 'var(--spacing-8)', borderRadius: 'var(--radius-2xl)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-md)' }}>
-        <h1 style={{ fontSize: '1.5rem', marginBottom: 'var(--spacing-6)', textAlign: 'center' }}>
-          Daftar Akun <span className="text-gradient">Wisata Banten</span>
-        </h1>
+    <div className={styles.loginContainer}>
+      <div className={styles.overlay}></div>
+      <div className={styles.loginCard}>
+        <div className={styles.logoArea}>
+          <div className={styles.logoIcon}>
+            <Compass size={28} />
+          </div>
+          <div className={styles.logoText}>Jelajah<br/>Nusantara</div>
+        </div>
         
         {errorMsg && (
-          <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--color-error)', padding: 'var(--spacing-3)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--spacing-4)', display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-2)', fontSize: '0.875rem' }}>
+          <div className={styles.errorBox}>
             <AlertTriangle size={18} style={{ flexShrink: 0, marginTop: '2px' }} /> <span>{errorMsg}</span>
           </div>
         )}
         
         {successMsg && (
-          <div style={{ backgroundColor: 'rgba(20, 184, 166, 0.1)', color: 'var(--color-tosca-dark)', padding: 'var(--spacing-3)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--spacing-4)', display: 'flex', alignItems: 'flex-start', gap: 'var(--spacing-2)', fontSize: '0.875rem' }}>
+          <div className={styles.errorBox} style={{ backgroundColor: 'rgba(20, 184, 166, 0.15)', borderColor: 'rgba(20, 184, 166, 0.3)', color: '#5eead4' }}>
             <CheckCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} /> <span>{successMsg}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
-          <div className="filterGroup">
-            <label className="label">Nama Lengkap</label>
-            <input type="text" name="full_name" className="input-field" placeholder="Nama Anda" required suppressHydrationWarning />
+        <form onSubmit={handleSubmit}>
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Nama Lengkap</label>
+            <input 
+              type="text" 
+              name="full_name" 
+              className={styles.input} 
+              placeholder="Nama Anda" 
+              required 
+              suppressHydrationWarning 
+            />
           </div>
-          <div className="filterGroup">
-            <label className="label">Email</label>
-            <input type="email" name="email" className="input-field" placeholder="nama@email.com" required suppressHydrationWarning />
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Email</label>
+            <input 
+              type="email" 
+              name="email" 
+              className={styles.input} 
+              placeholder="nama@email.com" 
+              required 
+              suppressHydrationWarning 
+            />
           </div>
-          <div className="filterGroup">
-            <label className="label">Password</label>
-            <input type="password" name="password" className="input-field" placeholder="Minimal 6 karakter" required minLength={6} suppressHydrationWarning />
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Password</label>
+            <input 
+              type="password" 
+              name="password" 
+              className={styles.input} 
+              placeholder="Minimal 6 karakter" 
+              required 
+              minLength={6} 
+              suppressHydrationWarning 
+            />
           </div>
-          <div className="filterGroup">
-            <label className="label">Konfirmasi Password</label>
-            <input type="password" name="confirm_password" className="input-field" placeholder="Ketik ulang password" required minLength={6} suppressHydrationWarning />
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Konfirmasi Password</label>
+            <input 
+              type="password" 
+              name="confirm_password" 
+              className={styles.input} 
+              placeholder="Ketik ulang password" 
+              required 
+              minLength={6} 
+              suppressHydrationWarning 
+            />
           </div>
-          <button type="submit" className="btn btn-primary" style={{ marginTop: 'var(--spacing-4)' }} disabled={isLoading} suppressHydrationWarning>
+          <button type="submit" className={styles.primaryBtn} disabled={isLoading} suppressHydrationWarning>
             {isLoading ? 'Loading...' : 'Daftar Sekarang'}
           </button>
         </form>
 
-        <div style={{ marginTop: 'var(--spacing-6)', textAlign: 'center', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-          Sudah punya akun? <Link href="/login" style={{ color: 'var(--color-tosca-main)', fontWeight: 600 }}>Login di sini</Link>
+        <div className={styles.footerText}>
+          Sudah punya akun? <Link href="/login" className={styles.link}>Login di sini</Link>
         </div>
       </div>
     </div>

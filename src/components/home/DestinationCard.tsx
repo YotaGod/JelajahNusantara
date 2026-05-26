@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { MapPin, Star } from 'lucide-react'
 import styles from './DestinationCard.module.css'
-import FavoriteButton from '@/components/ui/FavoriteButton'
 
 interface DestinationProps {
   id: string
@@ -15,7 +14,7 @@ interface DestinationProps {
 
 export default function DestinationCard({ dest }: { dest: DestinationProps }) {
   const formatPrice = (price: number | null) => {
-    if (price === null) return 'Gratis'
+    if (price === null || price === 0) return 'Gratis'
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
@@ -31,24 +30,20 @@ export default function DestinationCard({ dest }: { dest: DestinationProps }) {
         ) : (
           <div className={styles.imagePlaceholder}>No Image</div>
         )}
-        <span className={styles.categoryBadge}>{dest.categoryName}</span>
-        <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 10 }}>
-          <FavoriteButton destinationId={dest.id} />
-        </div>
       </div>
       <div className={styles.content}>
-        <div className={styles.header}>
+        <div className={styles.row}>
           <h3 className={styles.name} title={dest.name}>{dest.name}</h3>
           <div className={styles.rating}>
-            <Star size={16} fill="var(--color-warning)" color="var(--color-warning)" />
-            <span>{dest.avg_rating > 0 ? dest.avg_rating.toFixed(1) : 'New'}</span>
+            <Star size={14} fill="#F59E0B" color="#F59E0B" />
+            <span>{dest.avg_rating > 0 ? dest.avg_rating.toFixed(1) : '5.0'}</span>
           </div>
         </div>
-        <div className={styles.location}>
-          <MapPin size={16} />
-          <span>{dest.cityName}</span>
-        </div>
-        <div className={styles.footer}>
+        <div className={styles.row}>
+          <div className={styles.location}>
+            <MapPin size={14} />
+            <span>{dest.cityName}</span>
+          </div>
           <span className={styles.price}>{formatPrice(dest.price)}</span>
         </div>
       </div>

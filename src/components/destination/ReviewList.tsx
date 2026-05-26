@@ -48,16 +48,18 @@ export default function ReviewList({ destinationId, reviews, currentUserId, onEd
         return (
           <div key={rev.id} className={`${styles.reviewCard} ${isOwnReview ? styles.reviewCardOwn : ''}`}>
             <div className={styles.reviewHeader}>
-              <div className={styles.reviewUser}>
-                <div className={styles.reviewAvatar}>
-                  {rev.user?.avatar_url ? (
+              <div className={styles.userInfo}>
+                <div className={styles.avatar}>
+                  {currentUserId && rev.user?.avatar_url ? (
                     <img src={rev.user.avatar_url} alt={rev.user.full_name} className={styles.reviewAvatarImg} />
                   ) : (
-                    rev.user?.full_name?.charAt(0).toUpperCase() || 'U'
+                    (currentUserId && rev.user?.full_name) ? rev.user.full_name.charAt(0).toUpperCase() : 'A'
                   )}
                 </div>
-                <div className={styles.reviewMeta}>
-                  <span className={styles.reviewName}>{rev.user?.full_name || 'Pengguna Anonim'}</span>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span className={styles.userName}>
+                    {currentUserId ? (rev.user?.full_name || 'Pengguna Anonim') : 'Pengguna Anonim'}
+                  </span>
                   <span className={styles.reviewDate}>
                     {new Date(rev.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </span>
@@ -87,8 +89,8 @@ export default function ReviewList({ destinationId, reviews, currentUserId, onEd
 
             <StarRating rating={rev.rating} size={14} />
             
-            <div className={styles.reviewContent}>
-              <p className={styles.reviewComment}>{rev.comment}</p>
+            <div className={styles.reviewBody}>
+              <p className={styles.reviewText}>{rev.comment}</p>
             </div>
           </div>
         )

@@ -110,64 +110,70 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
   const avgRating = reviewCount > 0 ? totalRating / reviewCount : 0
 
   return (
-    <div className={`container ${styles.pageContainer}`}>
-      <Link href="/" className={`btn btn-ghost ${styles.backBtn}`}>
-        <ArrowLeft size={20} /> Kembali
-      </Link>
+    <div className={styles.pageContainer}>
+      {/* Full Width Hero Image */}
+      <div className={styles.heroImageContainer}>
+        <Link href="/" className={`btn btn-ghost ${styles.backBtn}`}>
+          <ArrowLeft size={20} /> Kembali
+        </Link>
+        {mainImage ? (
+          <>
+            <div className={styles.heroImageBlur} style={{ backgroundImage: `url(${mainImage})` }}></div>
+            <img src={mainImage} alt={dest.name} className={styles.heroImage} />
+          </>
+        ) : (
+          <div className={styles.heroPlaceholder}>Tidak ada foto</div>
+        )}
+      </div>
 
-      <div className={styles.gridContainer}>
-        {/* Main Column */}
-        <div>
-          {/* Gallery */}
-          <div className={styles.gallery}>
-            <div className={styles.mainImageContainer}>
-              {mainImage ? (
-                <img src={mainImage} alt={dest.name} className={styles.mainImage} />
-              ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--color-text-muted)' }}>Tidak ada foto</div>
-              )}
-            </div>
-            {dest.photos && dest.photos.length > 1 && (
-              <div className={styles.thumbnailList}>
-                {dest.photos.map((photo: any) => (
-                  <div 
-                    key={photo.id} 
-                    className={`${styles.thumbnail} ${mainImage === photo.image_url ? styles.thumbnailActive : ''}`}
-                    onClick={() => setMainImage(photo.image_url)}
-                  >
-                    <img src={photo.image_url} alt="Thumbnail" className={styles.thumbImg} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
+      <div className={`container ${styles.gridContainer}`}>
+        {/* Main Column (White) */}
+        <div className={styles.leftColumn}>
           {/* Header Info */}
           <div className={styles.headerRow}>
             <div className={styles.titleArea}>
               <h1>{dest.name}</h1>
               <div className={styles.badges}>
-                <span className={styles.badge}>{dest.category?.name}</span>
-                <span className={styles.badge}><MapPin size={14} /> {dest.city?.name}</span>
-                <span className={styles.badge} style={{ backgroundColor: 'var(--color-warning)', color: 'white' }}>
-                  <Star size={14} fill="white" /> {avgRating > 0 ? avgRating.toFixed(1) : 'Baru'} ({reviewCount} Ulasan)
+                <span className={styles.badge} style={{ backgroundColor: '#FEF3C7', color: '#92400E' }}>
+                  <Star size={14} fill="#F59E0B" color="#F59E0B" /> {avgRating > 0 ? avgRating.toFixed(1) : 'Baru'} ({reviewCount} Ulasan)
                 </span>
+                <span className={styles.badge} style={{ backgroundColor: '#f1f5f9' }}>{dest.category?.name}</span>
+                <span className={styles.badge} style={{ backgroundColor: '#f1f5f9' }}><MapPin size={14} /> {dest.city?.name}</span>
+                <span className={`${styles.badge} ${styles.popular}`}>Populer</span>
               </div>
             </div>
             <div className={styles.actionButtons}>
               <FavoriteButton 
                 destinationId={destinationId} 
                 size={24} 
-                style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }} 
               />
             </div>
           </div>
 
           {/* Description */}
           <div className={styles.descriptionSection}>
-            <h2>Tentang Destinasi</h2>
+            <h2 className={styles.sectionTitle}>Tentang Destinasi</h2>
             <div className={styles.descriptionText} style={{ textAlign: 'justify' }}>{dest.description || 'Belum ada deskripsi.'}</div>
           </div>
+
+          {/* Gallery */}
+          {dest.photos && dest.photos.length > 0 && (
+            <div className={styles.descriptionSection}>
+              <h2 className={styles.sectionTitle}>Galeri Foto</h2>
+              <div className={styles.galleryGrid}>
+                {dest.photos.slice(0, 5).map((photo: any) => (
+                  <div key={photo.id} className={styles.galleryThumb} onClick={() => setMainImage(photo.image_url)}>
+                    <img src={photo.image_url} alt="Thumbnail" className={styles.thumbImg} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+              {dest.photos.length > 5 && (
+                <button className={styles.seeAllBtn}>Lihat Semua Foto</button>
+              )}
+            </div>
+          )}
+
+
 
           {/* Reviews Section */}
           <div className={reviewStyles.reviewsContainer}>
@@ -213,77 +219,128 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
               currentUserId={userId}
               onEdit={(review) => {
                 setEditingReview(review)
-                // Scroll to form smoothly
                 window.scrollTo({ top: document.body.scrollHeight / 2, behavior: 'smooth' })
               }}
             />
+            
+            {/* Write Review Button mapped to Form state */}
+            {canReview && (!userReview || editingReview) && (
+              <button 
+                className={reviewStyles.writeReviewBtn}
+                onClick={() => {
+                  if (!editingReview) {
+                    // To do: expand form
+                  }
+                }}
+              >
+                Tulis Ulasan
+              </button>
+            )}
           </div>
         </div>
 
         {/* Sidebar Column */}
-        <div>
-          <div className={styles.infoCard}>
-            <div className={styles.infoSection}>
-              <span className={styles.infoLabel}>Harga Tiket Masuk</span>
-              <span className={styles.priceValue}>{formatPrice(dest.price)}</span>
-            </div>
+        <div className={styles.rightColumn}>
+          {/* Harga Tiket */}
+          <div className={`${styles.glassCard} ${styles.ticketCard}`}>
+            <span className={styles.ticketLabel}>Harga Tiket Masuk</span>
+            <div className={styles.ticketPrice}>{formatPrice(dest.price)}</div>
+          </div>
 
-            <div className={styles.infoSection}>
-              <span className={styles.infoLabel}>Jam Operasional</span>
-              <span className={styles.infoValue}><Clock size={18} color="var(--color-tosca-main)" /> {dest.open_hours || 'Tidak tersedia'}</span>
+          {/* Jam Operasional */}
+          <div className={styles.glassCard}>
+            <div className={styles.infoRow}>
+              <Clock size={24} className={styles.infoIcon} color="#FBBF24" />
+              <div className={styles.infoContent}>
+                <span className={styles.infoLabel}>Jam Operasional</span>
+                <span className={styles.infoValue}>{dest.open_hours || 'Buka Setiap Hari | 08:00 - 17:00 WIB'}</span>
+              </div>
             </div>
+          </div>
 
-            {dest.latitude && dest.longitude && (
+          {/* Cuaca Langsung */}
+          {dest.latitude && dest.longitude && (
+            <div className={styles.glassCard} style={{ padding: '0' }}>
               <WeatherWidget latitude={dest.latitude} longitude={dest.longitude} />
+            </div>
+          )}
+
+          {/* Alamat Lengkap */}
+          <div className={styles.glassCard}>
+            <div className={styles.infoRow}>
+              <MapPin size={24} className={styles.infoIcon} color="#FBBF24" />
+              <div className={styles.infoContent}>
+                <span className={styles.infoLabel}>Alamat Lengkap</span>
+                <span className={styles.infoValue}>{dest.address || 'Tidak tersedia'}</span>
+              </div>
+            </div>
+            
+            {/* Map Placeholder or Actual Component */}
+            {dest.latitude && dest.longitude ? (
+              <div style={{ marginTop: '1rem', width: '100%', height: '200px', backgroundColor: '#e2e8f0', borderRadius: '0.5rem', overflow: 'hidden' }}>
+                <iframe 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  loading="lazy" 
+                  allowFullScreen 
+                  referrerPolicy="no-referrer-when-downgrade" 
+                  src={`https://maps.google.com/maps?q=${dest.latitude},${dest.longitude}&z=14&output=embed`}
+                ></iframe>
+              </div>
+            ) : (
+              <div style={{ marginTop: '1rem', width: '100%', height: '200px', backgroundColor: '#e2e8f0', borderRadius: '0.5rem', overflow: 'hidden', position: 'relative' }}>
+                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', flexDirection: 'column', gap: '0.5rem' }}>
+                    <MapPin size={32} />
+                    <span>Peta tidak tersedia</span>
+                 </div>
+              </div>
             )}
 
-            <div className={styles.infoSection}>
-              <span className={styles.infoLabel}>Alamat Lokasi</span>
-              <span className={styles.infoValue} style={{ alignItems: 'flex-start' }}>
-                <MapPin size={18} color="var(--color-tosca-main)" style={{ flexShrink: 0, marginTop: '4px' }} />
-                <span>{dest.address || 'Tidak tersedia'}</span>
-              </span>
-              {dest.map_url && (
-                <a 
-                  href={dest.map_url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="btn btn-outline"
-                  style={{ marginTop: '0.5rem', alignSelf: 'flex-start' }}
-                >
-                  <Map size={16} /> Buka di Google Maps
-                </a>
-              )}
-            </div>
+            {dest.map_url && (
+              <a 
+                href={dest.map_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn btn-outline"
+                style={{ width: '100%', marginTop: '1rem', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.1)', border: 'none' }}
+              >
+                Buka di Google Maps
+              </a>
+            )}
+          </div>
 
-            <div className={styles.infoSection}>
-              <span className={styles.infoLabel}>Kontak Info</span>
-              <span className={styles.infoValue}>
-                <Phone size={18} color="var(--color-tosca-main)" /> 
-                {dest.contact ? (
-                  <a href={`tel:${dest.contact}`} style={{ color: 'var(--color-text)' }}>{dest.contact}</a>
-                ) : 'Tidak tersedia'}
-              </span>
+          {/* Fasilitas & Kontak */}
+          <div className={styles.glassCard}>
+            <div className={styles.infoRow}>
+              <Phone size={20} className={styles.infoIcon} />
+              <div className={styles.infoContent}>
+                <span className={styles.infoLabel}>Kontak Info</span>
+                <span className={styles.infoValue}>
+                  {dest.contact ? <a href={`tel:${dest.contact}`} style={{ color: 'white' }}>{dest.contact}</a> : 'Tidak tersedia'}
+                </span>
+              </div>
             </div>
-
-            <div className={styles.infoSection}>
-              <span className={styles.infoLabel}>Fasilitas</span>
-              {parsedFacilities && parsedFacilities.length > 0 ? (
-                <div className={styles.facilities}>
-                  {parsedFacilities.map((fac: string, idx: number) => (
-                    <span key={idx} className={styles.facilityTag}>{fac}</span>
-                  ))}
-                </div>
-              ) : (
-                <span className={styles.infoValue}>-</span>
-              )}
+            <div className={styles.infoRow} style={{ marginTop: '1rem' }}>
+              <div className={styles.infoContent} style={{ width: '100%' }}>
+                <span className={styles.infoLabel}>Fasilitas</span>
+                {parsedFacilities && parsedFacilities.length > 0 ? (
+                  <div className={styles.facilities}>
+                    {parsedFacilities.map((fac: string, idx: number) => (
+                      <span key={idx} className={styles.facilityTag}>{fac}</span>
+                    ))}
+                  </div>
+                ) : (
+                  <span className={styles.infoValue}>-</span>
+                )}
+              </div>
             </div>
-
+            
             {/* Report Button */}
-            <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--color-border)' }}>
+            <div style={{ marginTop: '1.5rem' }}>
               <button 
-                className="btn btn-ghost" 
-                style={{ width: '100%', color: 'var(--color-error)' }}
+                className="btn btn-outline" 
+                style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(239, 68, 68, 0.5)', color: '#fca5a5' }}
                 onClick={() => {
                   if (!userId) return addToast('Silakan login untuk melaporkan destinasi.', 'error')
                   setIsReportOpen(true)

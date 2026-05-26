@@ -38,10 +38,10 @@ export default function NearbyRecommendations() {
   return (
     <div className="container" style={{ marginTop: 'var(--spacing-8)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 'var(--spacing-4)' }}>
-        <MapPin color="var(--color-primary)" />
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Rekomendasi di Dekat Anda</h2>
+        <MapPin color="#14B8A6" />
+        <h2 className="animate-fade-in-up" style={{ fontSize: '1.5rem', fontWeight: 700, color: '#f8fafc' }}>Rekomendasi di Dekat Anda</h2>
       </div>
-      <p style={{ color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-6)' }}>
+      <p style={{ color: '#94a3b8', marginBottom: 'var(--spacing-6)' }}>
         Destinasi dengan rating terbaik di wilayah {((nearbyDestinations[0]?.city as any)?.name || (nearbyDestinations[0]?.city as any)?.[0]?.name) || 'Anda'}
       </p>
       

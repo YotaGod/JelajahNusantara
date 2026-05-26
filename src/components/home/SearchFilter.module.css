@@ -1,67 +1,120 @@
 .container {
-  margin: var(--spacing-8) 0;
-}
-
-.searchBar {
-  display: flex;
-  gap: var(--spacing-4);
-  align-items: stretch;
-}
-
-.inputWrapper {
-  flex-grow: 1;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.inputWrapper input {
-  padding-left: var(--spacing-10);
-  height: 100%;
-}
-
-.searchIcon {
-  position: absolute;
-  left: var(--spacing-3);
-  color: var(--color-text-muted);
-}
-
-.filterPanel {
-  margin-top: var(--spacing-4);
-  padding: var(--spacing-6);
-  background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: var(--spacing-4);
-  box-shadow: var(--shadow-sm);
-}
-
-.filterGroup {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+  animation: scaleFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
 }
 
-.filterActions {
-  display: flex;
-  align-items: flex-end;
-}
-
-@media (min-width: 640px) {
-  .filterPanel {
-    grid-template-columns: repeat(2, 1fr);
+@keyframes scaleFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
 @media (min-width: 768px) {
-  .filterPanel {
-    grid-template-columns: repeat(4, 1fr);
+  .container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-radius: 4rem; /* pill shape */
   }
 }
 
-@media (max-width: 640px) {
-  .hidden-mobile {
-    display: none;
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  padding: 0.5rem 1rem;
+}
+
+.searchIcon {
+  color: #94a3b8;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: transparent;
+}
+
+.searchInput::placeholder {
+  color: #94a3b8;
+}
+
+.divider {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .divider {
+    display: block;
+    width: 1px;
+    height: 24px;
+    background-color: #e2e8f0;
+    margin: 0 0.5rem;
   }
+}
+
+.selectInput {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #475569;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em;
+}
+
+@media (min-width: 768px) {
+  .selectInput {
+    border: none;
+    border-radius: 0;
+  }
+}
+
+.searchBtn {
+  background-color: #14B8A6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+@media (min-width: 768px) {
+  .searchBtn {
+    border-radius: 2rem;
+    padding: 0.75rem 2.5rem;
+  }
+}
+
+.searchBtn:hover {
+  background-color: #0D9488;
 }

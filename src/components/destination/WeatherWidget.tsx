@@ -46,12 +46,8 @@ export default function WeatherWidget({ latitude, longitude }: WeatherWidgetProp
         display: 'flex',
         alignItems: 'center',
         gap: '0.5rem',
-        padding: '1rem',
-        backgroundColor: 'var(--color-card)',
-        borderRadius: 'var(--radius-md)',
-        border: '1px solid var(--color-border)',
-        marginTop: '1rem',
-        color: 'var(--color-text-muted)'
+        padding: '1.5rem',
+        color: '#cbd5e1'
       }}>
         <Loader2 size={20} className="animate-spin" />
         <span style={{ fontSize: '0.875rem' }}>Memuat cuaca...</span>
@@ -62,12 +58,8 @@ export default function WeatherWidget({ latitude, longitude }: WeatherWidgetProp
   if (isError || !data) {
     return (
       <div style={{
-        padding: '1rem',
-        backgroundColor: 'var(--color-card)',
-        borderRadius: 'var(--radius-md)',
-        border: '1px solid var(--color-error)',
-        marginTop: '1rem',
-        color: 'var(--color-error)',
+        padding: '1.5rem',
+        color: '#fca5a5',
         fontSize: '0.875rem'
       }}>
         Gagal memuat cuaca saat ini.
@@ -87,63 +79,57 @@ export default function WeatherWidget({ latitude, longitude }: WeatherWidgetProp
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      padding: '1rem',
-      backgroundColor: 'var(--color-card)',
-      borderRadius: 'var(--radius-md)',
-      border: '1px solid var(--color-border)',
-      marginTop: '1rem',
-      gap: '1rem'
+      padding: '1.5rem',
+      gap: '1.25rem',
+      width: '100%'
     }}>
-      {/* Current Weather */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Cuaca Saat Ini
-          </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text)' }}>
-              {data.current.temp}&deg;C
-            </span>
-            <span style={{ fontSize: '0.875rem', color: 'var(--color-text)', borderLeft: '1px solid var(--color-border)', paddingLeft: '0.5rem' }}>
-              {currentDesc}
-            </span>
-          </div>
-        </div>
+      {/* Current Weather Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+        <span style={{ fontSize: '1.1rem', fontWeight: 600, color: '#f8fafc' }}>
+          Cuaca Langsung
+        </span>
+      </div>
+
+      {/* Current Weather Data */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
         <div>
           <img 
             src={`https://openweathermap.org/img/wn/${data.current.icon}@2x.png`} 
             alt={data.current.description}
-            style={{ width: '50px', height: '50px', objectFit: 'contain' }}
+            style={{ width: '64px', height: '64px', objectFit: 'contain' }}
             title={currentDesc}
           />
         </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontSize: '2.5rem', fontWeight: 800, color: '#ffffff', lineHeight: 1 }}>
+            {data.current.temp}&deg;C
+          </span>
+          <span style={{ fontSize: '0.875rem', color: '#cbd5e1' }}>
+            {currentDesc}
+          </span>
+        </div>
       </div>
 
-      <div style={{ height: '1px', backgroundColor: 'var(--color-border)', width: '100%' }} />
+      <div style={{ height: '1px', backgroundColor: 'rgba(255,255,255,0.1)', width: '100%' }} />
 
       {/* 5-Day Forecast */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          Prakiraan Kedepan
-        </span>
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-          {data.forecast.map((day, idx) => (
-            <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', minWidth: '40px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', fontWeight: 500 }}>
-                {idx === 0 ? 'Hari ini' : formatDay(day.date)}
-              </span>
-              <img 
-                src={`https://openweathermap.org/img/wn/${day.icon}.png`} 
-                alt={day.description}
-                style={{ width: '30px', height: '30px', objectFit: 'contain' }}
-                title={day.description.replace(/\b\w/g, l => l.toUpperCase())}
-              />
-              <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text)' }}>
-                {day.temp}&deg;
-              </span>
-            </div>
-          ))}
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', overflowX: 'auto' }}>
+        {data.forecast.map((day, idx) => (
+          <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', minWidth: '40px' }}>
+            <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 500 }}>
+              {idx === 0 ? 'Hari ini' : formatDay(day.date)}
+            </span>
+            <img 
+              src={`https://openweathermap.org/img/wn/${day.icon}.png`} 
+              alt={day.description}
+              style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+              title={day.description.replace(/\b\w/g, l => l.toUpperCase())}
+            />
+            <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f8fafc' }}>
+              {day.temp}&deg;
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   )

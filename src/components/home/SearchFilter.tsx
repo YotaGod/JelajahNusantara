@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { useDebouncedCallback } from 'use-debounce'
 import styles from './SearchFilter.module.css'
 import { useState, useEffect } from 'react'
@@ -31,9 +31,7 @@ export default function SearchFilter({
   onReset,
 }: SearchFilterProps) {
   const [searchValue, setSearchValue] = useState(initialSearch)
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  // Sync state if URL changes externally
   useEffect(() => {
     setSearchValue(initialSearch)
   }, [initialSearch])
@@ -49,103 +47,82 @@ export default function SearchFilter({
 
   return (
     <div className={styles.container}>
-      <div className={styles.searchBar}>
-        <div className={styles.inputWrapper}>
-          <Search className={styles.searchIcon} size={20} />
-          <input
-            type="text"
-            className="input-field"
-            placeholder="Cari destinasi wisata..."
-            value={searchValue}
-            onChange={handleSearchChange}
-            suppressHydrationWarning
-          />
-        </div>
-        <button 
-          className={`btn ${isFilterOpen ? 'btn-primary' : 'btn-outline'}`}
-          onClick={() => setIsFilterOpen(!isFilterOpen)}
+      <div className={styles.searchWrapper}>
+        <Search className={styles.searchIcon} size={18} />
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="Cari destinasi..."
+          value={searchValue}
+          onChange={handleSearchChange}
           suppressHydrationWarning
-        >
-          <SlidersHorizontal size={20} />
-          <span className="hidden-mobile">Filter</span>
-        </button>
+        />
       </div>
 
-      {isFilterOpen && (
-        <div className={`${styles.filterPanel} animate-fade-in`}>
-          <div className={styles.filterGroup}>
-            <label className="label">Kategori</label>
-            <select
-              className="input-field"
-              value={initialCategory}
-              onChange={(e) => onFilterChange('category', e.target.value)}
-              suppressHydrationWarning
-            >
-              <option value="">Semua Kategori</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
+      <div className={styles.divider}></div>
 
-          <div className={styles.filterGroup}>
-            <label className="label">Pulau</label>
-            <select
-              className="input-field"
-              value={initialIsland}
-              onChange={(e) => {
-                onFilterChange('island', e.target.value)
-                onFilterChange('city', '') // reset city when island changes
-              }}
-              suppressHydrationWarning
-            >
-              <option value="">Semua Pulau</option>
-              {islands.map((i) => (
-                <option key={i.id} value={i.id}>{i.name}</option>
-              ))}
-            </select>
-          </div>
+      <select
+        className={styles.selectInput}
+        value={initialIsland}
+        onChange={(e) => {
+          onFilterChange('island', e.target.value)
+          onFilterChange('city', '') 
+        }}
+        suppressHydrationWarning
+      >
+        <option value="">Pulau</option>
+        {islands.map((i) => (
+          <option key={i.id} value={i.id}>{i.name}</option>
+        ))}
+      </select>
 
-          <div className={styles.filterGroup}>
-            <label className="label">Kota/Kabupaten</label>
-            <select
-              className="input-field"
-              value={initialCity}
-              onChange={(e) => onFilterChange('city', e.target.value)}
-              suppressHydrationWarning
-            >
-              <option value="">Semua Kota</option>
-              {cities.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
+      <div className={styles.divider}></div>
 
-          <div className={styles.filterGroup}>
-            <label className="label">Harga Tiket</label>
-            <select
-              className="input-field"
-              value={initialPrice}
-              onChange={(e) => onFilterChange('price', e.target.value)}
-              suppressHydrationWarning
-            >
-              <option value="">Semua Harga</option>
-              <option value="free">Gratis</option>
-              <option value="0-25">Rp 0 - 25.000</option>
-              <option value="25-50">Rp 25.000 - 50.000</option>
-              <option value="50-100">Rp 50.000 - 100.000</option>
-              <option value="100+">Di atas Rp 100.000</option>
-            </select>
-          </div>
+      <select
+        className={styles.selectInput}
+        value={initialCity}
+        onChange={(e) => onFilterChange('city', e.target.value)}
+        suppressHydrationWarning
+      >
+        <option value="">Kota</option>
+        {cities.map((c) => (
+          <option key={c.id} value={c.id}>{c.name}</option>
+        ))}
+      </select>
 
-          <div className={styles.filterActions}>
-            <button className="btn btn-ghost" onClick={onReset} suppressHydrationWarning>
-              <X size={18} />
-              Reset
-            </button>
-          </div>
-        </div>
-      )}
+      <div className={styles.divider}></div>
+
+      <select
+        className={styles.selectInput}
+        value={initialCategory}
+        onChange={(e) => onFilterChange('category', e.target.value)}
+        suppressHydrationWarning
+      >
+        <option value="">Kategori</option>
+        {categories.map((c) => (
+          <option key={c.id} value={c.id}>{c.name}</option>
+        ))}
+      </select>
+
+      <div className={styles.divider}></div>
+
+      <select
+        className={styles.selectInput}
+        value={initialPrice}
+        onChange={(e) => onFilterChange('price', e.target.value)}
+        suppressHydrationWarning
+      >
+        <option value="">Harga</option>
+        <option value="free">Gratis</option>
+        <option value="0-25">Rp 0 - 25k</option>
+        <option value="25-50">Rp 25k - 50k</option>
+        <option value="50-100">Rp 50k - 100k</option>
+        <option value="100+">&gt; Rp 100k</option>
+      </select>
+
+      <button className={styles.searchBtn} onClick={() => {}} suppressHydrationWarning>
+        Cari
+      </button>
     </div>
   )
 }
