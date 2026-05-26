@@ -42,7 +42,7 @@ export default async function Header() {
           <Link href="/" className={`${styles.navLink} ${styles.active}`}>Home</Link>
           <Link href="/map" className={styles.navLink}>Peta</Link>
           <Link href="/about" className={styles.navLink}>Tentang Kami</Link>
-          <span className={styles.navLink}>Kontak</span>
+          <Link href="/kontak" className={styles.navLink}>Kontak</Link>
         </nav>
 
         {/* Right Nav */}

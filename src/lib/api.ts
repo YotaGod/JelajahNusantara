@@ -467,3 +467,28 @@ export async function deleteOwnAccount() {
   if (error) throw error
   return true
 }
+
+export async function submitFeedback(
+  userId: string,
+  subject: string,
+  message: string,
+  targetAdminType: 'super_admin' | 'regional_admin',
+  targetCityId?: string
+) {
+  if (!userId) throw new Error("User must be logged in")
+  
+  const { data, error } = await supabase
+    .from('feedbacks')
+    .insert({
+      user_id: userId,
+      subject,
+      message,
+      target_admin_type: targetAdminType,
+      target_city_id: targetCityId || null
+    })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
