@@ -26,6 +26,7 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
 
   // Review State
   const [editingReview, setEditingReview] = useState<any>(null)
+  const [isFormOpen, setIsFormOpen] = useState(false)
 
   const { data: dest, isLoading, isError } = useQuery({
     queryKey: ['destination', destinationId],
@@ -190,13 +191,19 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
             {userId ? (
               canReview ? (
                 // User can review
-                (!userReview || editingReview) ? (
+                (isFormOpen || editingReview) ? (
                   <ReviewForm 
                     destinationId={destinationId} 
                     userId={userId} 
                     existingReview={editingReview}
-                    onSuccess={() => setEditingReview(null)}
-                    onCancel={() => setEditingReview(null)}
+                    onSuccess={() => {
+                      setEditingReview(null)
+                      setIsFormOpen(false)
+                    }}
+                    onCancel={() => {
+                      setEditingReview(null)
+                      setIsFormOpen(false)
+                    }}
                   />
                 ) : null // User has a review but is not editing, don't show form (it will be in the list with edit button)
               ) : (
@@ -224,14 +231,10 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
             />
             
             {/* Write Review Button mapped to Form state */}
-            {canReview && (!userReview || editingReview) && (
+            {canReview && !userReview && !isFormOpen && !editingReview && (
               <button 
                 className={reviewStyles.writeReviewBtn}
-                onClick={() => {
-                  if (!editingReview) {
-                    // To do: expand form
-                  }
-                }}
+                onClick={() => setIsFormOpen(true)}
               >
                 Tulis Ulasan
               </button>
