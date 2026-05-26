@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
 import styles from './Header.module.css'
 import { LogOut, User, LayoutDashboard, Map, ChevronDown, Compass } from 'lucide-react'
+import UserDropdown from './UserDropdown'
 
 export default async function Header() {
   const supabase = await createClient()
@@ -47,31 +48,7 @@ export default async function Header() {
         {/* Right Nav */}
         <div className={styles.rightNav}>
           {user ? (
-            <div className={styles.userPill}>
-              <div className={styles.avatar}>
-                <User size={16} color="var(--color-bg)" />
-              </div>
-              <span className={styles.userName}>
-                {user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0]}
-              </span>
-              <ChevronDown size={16} color="var(--color-text-muted)" />
-              
-              <div className={styles.dropdown}>
-                {isAdmin && (
-                  <Link href="/admin" className={styles.dropdownItem}>
-                    <LayoutDashboard size={16} /> Dashboard
-                  </Link>
-                )}
-                <Link href="/profile" className={styles.dropdownItem}>
-                  <User size={16} /> Profil
-                </Link>
-                <form action="/auth/signout" method="post" style={{ margin: 0 }}>
-                  <button type="submit" className={styles.dropdownItem} style={{ width: '100%', textAlign: 'left', cursor: 'pointer' }}>
-                    <LogOut size={16} /> Logout
-                  </button>
-                </form>
-              </div>
-            </div>
+            <UserDropdown user={user} isAdmin={isAdmin} />
           ) : (
             <div className={styles.userMenu}>
               <Link href="/login" className={styles.navLink}>

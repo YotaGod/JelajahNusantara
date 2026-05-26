@@ -146,10 +146,6 @@
   gap: 0.25rem;
 }
 
-.userPill:hover .dropdown {
-  display: flex;
-}
-
 .dropdownItem {
   display: flex;
   align-items: center;
