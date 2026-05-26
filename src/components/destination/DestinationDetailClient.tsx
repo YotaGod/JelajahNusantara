@@ -11,6 +11,7 @@ import ReviewList from './ReviewList'
 import ReviewForm from './ReviewForm'
 import StarRating from './StarRating'
 import FavoriteButton from '@/components/ui/FavoriteButton'
+import WeatherWidget from './WeatherWidget'
 import { useToast } from '@/components/ui/ToastProvider'
 
 export default function DestinationDetailClient({ destinationId, userId }: { destinationId: string, userId: string | null }) {
@@ -231,6 +232,10 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
               <span className={styles.infoLabel}>Jam Operasional</span>
               <span className={styles.infoValue}><Clock size={18} color="var(--color-tosca-main)" /> {dest.open_hours || 'Tidak tersedia'}</span>
             </div>
+
+            {dest.latitude && dest.longitude && (
+              <WeatherWidget latitude={dest.latitude} longitude={dest.longitude} />
+            )}
 
             <div className={styles.infoSection}>
               <span className={styles.infoLabel}>Alamat Lokasi</span>
