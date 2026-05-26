@@ -81,6 +81,7 @@
 .avatar {
   width: 40px;
   height: 40px;
+  min-width: 40px;
   border-radius: 50%;
   background-color: #e2e8f0;
   display: flex;
@@ -88,6 +89,13 @@
   justify-content: center;
   font-weight: 600;
   color: #475569;
+}
+
+.reviewAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .userName {
