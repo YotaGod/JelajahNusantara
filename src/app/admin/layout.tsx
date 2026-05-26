@@ -5,7 +5,7 @@ import { createClient } from '@/utils/supabase/client'
 import { getUserProfile } from '@/lib/api'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Map as MapIcon, Users, AlertTriangle, LogOut, Menu, X, FolderPlus } from 'lucide-react'
+import { LayoutDashboard, Map as MapIcon, Users, AlertTriangle, LogOut, Menu, X, FolderPlus, MessageSquare } from 'lucide-react'
 import './admin.css'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="sidebarMenu">
           <Link 
             href="/admin" 
-            className={`menuItem ${pathname === '/admin' ? 'menuItemActive' : ''}`}
+            className={`menuItem ${pathname === '/admin' ? 'active' : ''}`}
             onClick={() => setIsSidebarOpen(false)}
           >
             <LayoutDashboard size={20} />
@@ -76,7 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           
           <Link 
             href="/admin/destinations" 
-            className={`menuItem ${pathname.startsWith('/admin/destinations') ? 'menuItemActive' : ''}`}
+            className={`menuItem ${pathname.startsWith('/admin/destinations') ? 'active' : ''}`}
             onClick={() => setIsSidebarOpen(false)}
           >
             <MapIcon size={20} />
@@ -86,7 +86,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {isSuperAdmin && (
             <Link 
               href="/admin/users" 
-              className={`menuItem ${pathname.startsWith('/admin/users') ? 'menuItemActive' : ''}`}
+              className={`menuItem ${pathname.startsWith('/admin/users') ? 'active' : ''}`}
               onClick={() => setIsSidebarOpen(false)}
             >
               <Users size={20} />
@@ -96,7 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <Link 
             href="/admin/reports" 
-            className={`menuItem ${pathname.startsWith('/admin/reports') ? 'menuItemActive' : ''}`}
+            className={`menuItem ${pathname.startsWith('/admin/reports') ? 'active' : ''}`}
             onClick={() => setIsSidebarOpen(false)}
           >
             <AlertTriangle size={20} />
@@ -104,8 +104,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
 
           <Link 
+            href="/admin/feedbacks" 
+            className={`menuItem ${pathname.startsWith('/admin/feedbacks') ? 'active' : ''}`}
+            onClick={() => setIsSidebarOpen(false)}
+          >
+            <MessageSquare size={20} />
+            Kelola Masukan
+          </Link>
+
+          <Link 
             href="/admin/proposals" 
-            className={`menuItem ${pathname.startsWith('/admin/proposals') ? 'menuItemActive' : ''}`}
+            className={`menuItem ${pathname.startsWith('/admin/proposals') ? 'active' : ''}`}
             onClick={() => setIsSidebarOpen(false)}
           >
             <FolderPlus size={20} />
@@ -132,6 +141,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               {pathname === '/admin' ? 'Dashboard Summary' : 
                pathname.startsWith('/admin/destinations') ? 'Destinasi' : 
                pathname.startsWith('/admin/users') ? 'Pengguna' : 
+               pathname.startsWith('/admin/feedbacks') ? 'Masukan / Keluhan' : 
                pathname.startsWith('/admin/proposals') ? 'Pengajuan Data' : 'Laporan'}
             </span>
           </div>

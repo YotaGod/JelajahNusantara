@@ -1,11 +1,11 @@
 -- Add feedbacks table for contacting admin & regional admin
 CREATE TABLE IF NOT EXISTS public.feedbacks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES public.user_profiles(id) ON DELETE CASCADE,
+    user_id UUID CONSTRAINT feedbacks_user_id_fkey REFERENCES public.user_profiles(id) ON DELETE CASCADE,
     subject TEXT NOT NULL,
     message TEXT NOT NULL,
     target_admin_type TEXT NOT NULL CHECK (target_admin_type IN ('super_admin', 'regional_admin')),
-    target_city_id UUID REFERENCES public.cities(id) ON DELETE SET NULL,
+    target_city_id UUID CONSTRAINT feedbacks_target_city_id_fkey REFERENCES public.cities(id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT now()
 );
 

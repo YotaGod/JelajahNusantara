@@ -395,4 +395,32 @@ export async function updateProposalStatus(type: 'category' | 'city', id: string
   return true
 }
 
+export async function getAdminFeedbacks(adminRole: string, regionCityId: string | null, page: number) {
+  const ITEMS_PER_PAGE = 10
+  const offset = (page - 1) * ITEMS_PER_PAGE
+
+  let query = supabase
+    .from('feedbacks')
+    .select(`
+      id, subject, message, target_admin_type, target_city_id, created_at,
+      user:user_profiles!feedbacks_user_id_fkey(full_name),
+      city:cities!feedbacks_target_city_id_fkey(name)
+    `, { count: 'exact' })
+    .range(offset, offset + ITEMS_PER_PAGE - 1)
+    .order('created_at', { ascending: false })
+
+  if (adminRole === 'regional_admin' && regionCityId) {
+    query = query.eq('target_city_id', regionCityId)
+  }
+
+  const { data, count, error } = await query
+  if (error) throw error
+
+  return {
+    data: data || [],
+    count: count || 0,
+    totalPages: count ? Math.ceil(count / ITEMS_PER_PAGE) : 0,
+  }
+}
+
 
