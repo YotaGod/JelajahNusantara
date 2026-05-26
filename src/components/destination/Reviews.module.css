@@ -8,6 +8,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
 
@@ -15,23 +17,27 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #ffffff;
+  margin: 0;
 }
 
 .reviewsStats {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: nowrap;
 }
 
 .avgRating {
   font-size: 1.5rem;
   font-weight: 700;
   color: #ffffff;
+  line-height: 1;
 }
 
 .totalReviews {
   color: #64748b;
   font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .emptyState {
