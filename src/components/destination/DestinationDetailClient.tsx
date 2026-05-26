@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getDestinationDetail, submitReport, getUserProfile, getUserReports, cancelUserReport } from '@/lib/api'
-import { ArrowLeft, Star, MapPin, Map, Clock, Phone, AlertTriangle, X, FileWarning } from 'lucide-react'
+import { ArrowLeft, Star, MapPin, Map, Clock, Phone, AlertTriangle, X, FileWarning, ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import styles from './DestinationDetailClient.module.css'
@@ -17,7 +17,7 @@ import { useToast } from '@/components/ui/ToastProvider'
 export default function DestinationDetailClient({ destinationId, userId }: { destinationId: string, userId: string | null }) {
   const queryClient = useQueryClient()
   const { addToast } = useToast()
-  const [mainImage, setMainImage] = useState<string>('')
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
   
   // Report Modal State
   const [isReportOpen, setIsReportOpen] = useState(false)
@@ -63,9 +63,25 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
   useEffect(() => {
     if (dest?.photos && dest.photos.length > 0) {
       const primary = dest.photos.find((p: any) => p.is_primary)
-      setMainImage(primary ? primary.image_url : dest.photos[0].image_url)
+      const primaryIndex = primary ? dest.photos.indexOf(primary) : 0
+      setCurrentImageIndex(primaryIndex >= 0 ? primaryIndex : 0)
     }
   }, [dest])
+
+  // Automatic slideshow effect
+  useEffect(() => {
+    if (!dest?.photos || dest.photos.length <= 1) return
+
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % dest.photos.length)
+    }, 5000) // Change slide every 5 seconds
+
+    return () => clearInterval(timer)
+  }, [dest, currentImageIndex])
+
+  const hasMultipleImages = dest?.photos && dest.photos.length > 1
+  const currentPhoto = dest?.photos?.[currentImageIndex]
+  const mainImage = currentPhoto ? currentPhoto.image_url : ''
 
   const reportMutation = useMutation({
     mutationFn: () => submitReport(destinationId, userId!, reportType, reportDesc),
@@ -112,7 +128,7 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
 
   return (
     <div className={styles.pageContainer}>
-      {/* Full Width Hero Image */}
+      {/* Full Width Hero Image with Slider Controls */}
       <div className={styles.heroImageContainer}>
         <Link href="/" className={`btn btn-ghost ${styles.backBtn}`}>
           <ArrowLeft size={20} /> Kembali
@@ -121,6 +137,46 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
           <>
             <div className={styles.heroImageBlur} style={{ backgroundImage: `url(${mainImage})` }}></div>
             <img src={mainImage} alt={dest.name} className={styles.heroImage} />
+            
+            {hasMultipleImages && (
+              <>
+                <button 
+                  className={styles.slideBtnLeft} 
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setCurrentImageIndex((prev) => (prev === 0 ? dest.photos.length - 1 : prev - 1))
+                  }}
+                  aria-label="Gambar Sebelumnya"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button 
+                  className={styles.slideBtnRight} 
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setCurrentImageIndex((prev) => (prev === dest.photos.length - 1 ? 0 : prev + 1))
+                  }}
+                  aria-label="Gambar Selanjutnya"
+                >
+                  <ChevronRight size={20} />
+                </button>
+
+                {/* Pagination Dots */}
+                <div className={styles.slideDots}>
+                  {dest.photos.map((_: any, idx: number) => (
+                    <button
+                      key={idx}
+                      className={`${styles.slideDot} ${idx === currentImageIndex ? styles.slideDotActive : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setCurrentImageIndex(idx)
+                      }}
+                      aria-label={`Lihat gambar ke-${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </>
         ) : (
           <div className={styles.heroPlaceholder}>Tidak ada foto</div>
@@ -162,8 +218,12 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
             <div className={styles.descriptionSection}>
               <h2 className={styles.sectionTitle}>Galeri Foto</h2>
               <div className={styles.galleryGrid}>
-                {dest.photos.slice(0, 5).map((photo: any) => (
-                  <div key={photo.id} className={styles.galleryThumb} onClick={() => setMainImage(photo.image_url)}>
+                {dest.photos.slice(0, 5).map((photo: any, index: number) => (
+                  <div 
+                    key={photo.id} 
+                    className={`${styles.galleryThumb} ${index === currentImageIndex ? styles.galleryThumbActive : ''}`} 
+                    onClick={() => setCurrentImageIndex(index)}
+                  >
                     <img src={photo.image_url} alt="Thumbnail" className={styles.thumbImg} loading="lazy" />
                   </div>
                 ))}
