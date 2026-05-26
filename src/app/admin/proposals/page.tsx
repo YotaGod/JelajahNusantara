@@ -103,7 +103,7 @@ export default function AdminProposals() {
   const isSuperAdmin = profile?.role === 'super_admin'
 
   const renderCategories = () => (
-    <div className="tableContainer">
+    <div className="tableContainer animate-fade-in-up">
       <table className="adminTable">
         <thead>
           <tr>
@@ -140,7 +140,7 @@ export default function AdminProposals() {
   )
 
   const renderCities = () => (
-    <div className="tableContainer">
+    <div className="tableContainer animate-fade-in-up">
       <table className="adminTable">
         <thead>
           <tr>

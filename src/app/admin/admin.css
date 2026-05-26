@@ -3,13 +3,26 @@
 .adminLayout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--color-bg);
+  background-color: #0f172a;
+  color: #f8fafc;
+  color-scheme: dark;
+  
+  /* Dark mode overrides for charts and generic components */
+  --color-bg: #0f172a;
+  --color-bg-alt: #1e293b;
+  --color-card: rgba(255, 255, 255, 0.05);
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-border: rgba(255, 255, 255, 0.1);
 }
 
 /* Sidebar */
 .adminSidebar {
   width: 260px;
-  background-color: #1e293b;
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   display: flex;
   flex-direction: column;
@@ -45,15 +58,22 @@
   align-items: center;
   gap: var(--spacing-3);
   padding: var(--spacing-3) var(--spacing-6);
-  color: #cbd5e1;
+  color: #94a3b8;
   text-decoration: none;
   font-weight: 500;
   transition: all var(--transition-fast);
+  border-left: 3px solid transparent;
 }
 
-.menuItem:hover, .menuItemActive {
-  background-color: rgba(255, 255, 255, 0.1);
+.menuItem:hover {
+  background-color: rgba(20, 184, 166, 0.1);
   color: white;
+}
+
+.menuItem.active {
+  background-color: rgba(20, 184, 166, 0.15);
+  color: var(--color-tosca-main);
+  border-left-color: var(--color-tosca-main);
 }
 
 .sidebarFooter {
@@ -90,12 +110,14 @@
 
 .adminHeader {
   height: 80px;
-  background-color: var(--color-card);
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   padding: 0 var(--spacing-6);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -107,6 +129,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
+  color: white;
 }
 
 .mobileMenuBtn {
@@ -114,7 +137,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--color-text);
+  color: white;
 }
 
 .adminProfile {
@@ -137,11 +160,12 @@
 .adminName {
   font-weight: 600;
   font-size: 0.875rem;
+  color: white;
 }
 
 .adminRole {
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: #94a3b8;
   text-transform: capitalize;
 }
 
@@ -171,13 +195,15 @@
 }
 
 .statCard {
-  background-color: var(--color-card);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: var(--spacing-6);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   gap: var(--spacing-4);
+  backdrop-filter: blur(8px);
 }
 
 .statIcon {
@@ -190,34 +216,36 @@
   flex-shrink: 0;
 }
 
-.statIconBlue { background-color: #eff6ff; color: #3b82f6; }
-.statIconGreen { background-color: #f0fdf4; color: #22c55e; }
-.statIconYellow { background-color: #fefce8; color: #eab308; }
-.statIconRed { background-color: #fef2f2; color: #ef4444; }
+.statIconBlue { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.statIconGreen { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.statIconYellow { background-color: rgba(234, 179, 8, 0.2); color: #facc15; }
+.statIconRed { background-color: rgba(239, 68, 68, 0.2); color: #f87171; }
 
 .statInfo h3 {
   font-size: 0.875rem;
-  color: var(--color-text-muted);
+  color: #94a3b8;
   margin-bottom: var(--spacing-1);
 }
 
 .statValue {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: white;
 }
 
 /* Tables */
 .tableContainer {
-  background-color: var(--color-card);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  backdrop-filter: blur(8px);
 }
 
 .tableHeader {
   padding: var(--spacing-4) var(--spacing-6);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -240,22 +268,23 @@
   border-collapse: collapse;
   text-align: left;
   min-width: 600px; /* Ensure it scrolls on mobile */
+  color: #f8fafc;
 }
 
 .adminTable th, .adminTable td {
   padding: var(--spacing-3) var(--spacing-6);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .adminTable th {
-  background-color: var(--color-bg-alt);
+  background-color: rgba(0, 0, 0, 0.3);
   font-weight: 600;
   font-size: 0.875rem;
-  color: var(--color-text-muted);
+  color: #cbd5e1;
 }
 
 .adminTable tbody tr:hover {
-  background-color: var(--color-bg-alt);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .adminTable td {
@@ -272,7 +301,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--color-text-muted);
+  color: #94a3b8;
   padding: 4px;
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
@@ -282,13 +311,13 @@
 }
 
 .iconBtn:hover {
-  background-color: var(--color-bg-alt);
-  color: var(--color-text);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
-.iconBtn.edit:hover { color: #3b82f6; background-color: var(--color-bg-blue); }
-.iconBtn.delete:hover { color: #ef4444; background-color: var(--color-bg-red); }
-.iconBtn.success:hover { color: #22c55e; background-color: var(--color-bg-green); }
+.iconBtn.edit:hover { color: #60a5fa; background-color: rgba(59, 130, 246, 0.2); }
+.iconBtn.delete:hover { color: #f87171; background-color: rgba(239, 68, 68, 0.2); }
+.iconBtn.success:hover { color: #4ade80; background-color: rgba(34, 197, 94, 0.2); }
 
 /* Modals */
 .modalOverlay {
@@ -297,7 +326,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -306,14 +336,16 @@
 }
 
 .modalContent {
-  background-color: var(--color-card);
+  background-color: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-xl);
   width: calc(100% - var(--spacing-8));
   max-width: 800px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  color: #f8fafc;
 }
 
 .modalContent.small {
@@ -322,7 +354,7 @@
 
 .modalHeader {
   padding: var(--spacing-4) var(--spacing-6);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -330,13 +362,19 @@
 
 .modalHeader h3 {
   margin: 0;
+  color: white;
 }
 
 .closeBtn {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--color-text-muted);
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.closeBtn:hover {
+  color: white;
 }
 
 .modalBody {
@@ -347,7 +385,7 @@
 
 .modalFooter {
   padding: var(--spacing-4) var(--spacing-6);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: flex-end;
   gap: var(--spacing-3);
@@ -374,18 +412,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 2px dashed var(--color-border);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-lg);
   padding: var(--spacing-6);
   text-align: center;
   cursor: pointer;
-  background-color: var(--color-bg-alt);
+  background-color: rgba(255, 255, 255, 0.05);
   transition: all var(--transition-fast);
+  color: #cbd5e1;
 }
 
 .photoUploadArea:hover {
   border-color: var(--color-tosca-main);
-  background-color: rgba(20, 184, 166, 0.05);
+  background-color: rgba(20, 184, 166, 0.1);
+  color: white;
 }
 
 .photoPreviewGrid {
@@ -440,9 +480,9 @@
   font-weight: 500;
 }
 
-.badge.pending { background-color: #fefce8; color: #a16207; }
-.badge.resolved { background-color: #f0fdf4; color: #15803d; }
-.badge.rejected { background-color: #fef2f2; color: #b91c1c; }
+.badge.pending { background-color: rgba(234, 179, 8, 0.2); color: #facc15; }
+.badge.resolved { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.badge.rejected { background-color: rgba(239, 68, 68, 0.2); color: #f87171; }
 
 /* Mobile Sidebar Toggle */
 @media (max-width: 768px) {

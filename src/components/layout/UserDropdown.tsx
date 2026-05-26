@@ -35,7 +35,7 @@ export default function UserDropdown({ user, isAdmin }: UserDropdownProps) {
       <ChevronDown size={16} color="var(--color-text-muted)" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
       
       {isOpen && (
-        <div className={styles.dropdown} style={{ display: 'flex' }}>
+        <div className={styles.dropdown} style={{ display: 'flex' }} onClick={(e) => e.stopPropagation()}>
           {isAdmin && (
             <Link href="/admin" className={styles.dropdownItem} onClick={() => setIsOpen(false)}>
               <LayoutDashboard size={16} /> Dashboard

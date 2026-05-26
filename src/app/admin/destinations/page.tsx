@@ -224,7 +224,7 @@ export default function AdminDestinations() {
         </div>
       </div>
 
-      <div className="tableContainer">
+      <div className="tableContainer animate-fade-in-up">
         <div className="adminTableWrapper">
           <table className="adminTable">
             <thead>
