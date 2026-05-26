@@ -516,3 +516,10 @@
   width: 100% !important;
 }
 
+/* Fix select dropdown options visibility in dark mode */
+.adminLayout select option,
+.adminLayout .input-field option {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+

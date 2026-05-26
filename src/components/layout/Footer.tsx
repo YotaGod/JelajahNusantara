@@ -7,41 +7,43 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={`container ${styles.footerContainer}`}>
         <div className={styles.grid}>
-          {/* Link */}
+          {/* Navigasi */}
           <div className={styles.col}>
-            <h4 className={styles.title}>Link</h4>
+            <h4 className={styles.title}>Navigasi</h4>
             <div className={styles.links}>
               <Link href="/">Home</Link>
-              <Link href="/destinations">Destinasi</Link>
+              <Link href="/map">Peta Wisata</Link>
               <Link href="/about">Tentang Kami</Link>
+              <Link href="/kontak">Hubungi Kami</Link>
             </div>
           </div>
 
-          {/* Destinasi */}
+          {/* Kategori Wisata */}
           <div className={styles.col}>
-            <h4 className={styles.title}>Destinasi</h4>
+            <h4 className={styles.title}>Kategori Wisata</h4>
             <div className={styles.links}>
-              <Link href="/contact">Contact Us</Link>
-              <Link href="/destinasi">Destinasi</Link>
-              <Link href="/kontak">Kontak</Link>
+              <Link href="/?category=c0000000-0000-0000-0000-000000000001">Wisata Pantai</Link>
+              <Link href="/?category=c0000000-0000-0000-0000-000000000002">Wisata Gunung</Link>
+              <Link href="/?category=c0000000-0000-0000-0000-000000000003">Wisata Budaya</Link>
+              <Link href="/?category=c0000000-0000-0000-0000-000000000004">Wisata Kuliner</Link>
             </div>
           </div>
 
-          {/* Contact Info */}
+          {/* Hubungi Kami */}
           <div className={styles.col}>
             <h4 className={styles.title}>Contact Info</h4>
             <div className={styles.contactLinks}>
               <div className={styles.contactItem}>
                 <Phone size={16} />
-                <span>0912) 355 7779</span>
+                <span>+62 254 123456</span>
               </div>
               <div className={styles.contactItem}>
                 <Mail size={16} />
-                <span>jelajahnusantara.com</span>
+                <span>info@wisatabanten.com</span>
               </div>
               <div className={styles.contactItem}>
                 <Globe size={16} />
-                <span>jelajahnusantara.com</span>
+                <span>wisatabanten.com</span>
               </div>
             </div>
           </div>
