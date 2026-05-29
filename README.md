@@ -25,6 +25,7 @@ Platform web komprehensif untuk mengeksplorasi destinasi wisata di Indonesia. Me
 - **Sistem Role Bertingkat**: Pembagian hak akses yang jelas antara `Visitor`, `User`, `Regional Admin`, dan `Super Admin`.
 - **Pengajuan Data (Proposals)**: Mekanisme pengajuan daerah atau kategori wisata baru oleh Regional Admin untuk disetujui Super Admin sebelum tampil ke publik.
 - **Integrasi Peta**: Navigasi dan visualisasi lokasi presisi destinasi menggunakan peta interaktif.
+- **Prakiraan Cuaca 5 Hari**: Integrasi data cuaca aktual dan prakiraan cuaca 5 hari ke depan menggunakan OpenWeatherMap API untuk membantu perencanaan perjalanan.
 - **Keamanan & RLS Terjamin**: Perlindungan dari manipulasi hak akses ilegal menggunakan PostgreSQL Triggers dan pengunggahan gambar aman via Server-Side API.
 
 ## 🛠️ Tech Stack
@@ -85,8 +86,11 @@ Contoh file `.env.example`:
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
-# ImgBB Configuration
-NEXT_PUBLIC_IMGBB_API_KEY=your-imgbb-api-key
+# ImgBB Configuration (Server-Side)
+IMGBB_API_KEY=your-imgbb-api-key
+
+# OpenWeatherMap Configuration (Weather Forecast)
+OPENWEATHER_API_KEY=your-openweather-api-key
 ```
 
 ## 📂 Project Structure

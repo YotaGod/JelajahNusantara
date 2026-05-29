@@ -25,6 +25,7 @@ https://jelajah-nusantara-six.vercel.app/
 - **Multi-tiered Role System**: Clear permission boundaries for `Visitor`, `User`, `Regional Admin`, and `Super Admin`.
 - **Proposal System**: Regional Admins can submit new regions or categories for approval by Super Admins before displaying them publicly.
 - **Map Integration**: Dynamic navigation and precise location visualization of destinations using interactive maps.
+- **5-Day Weather Forecast**: Live weather updates and 5-day weather forecasts powered by the OpenWeatherMap API for each destination.
 - **Advanced Security & RLS**: Database security is reinforced using PostgreSQL Triggers to block unauthorized role modifications, and secure image uploads via a Server-Side API route.
 
 ## 🛠️ Tech Stack
@@ -85,8 +86,11 @@ Example `.env.example` file:
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
-# ImgBB Configuration
-NEXT_PUBLIC_IMGBB_API_KEY=your-imgbb-api-key
+# ImgBB Configuration (Server-Side)
+IMGBB_API_KEY=your-imgbb-api-key
+
+# OpenWeatherMap Configuration (Weather Forecast)
+OPENWEATHER_API_KEY=your-openweather-api-key
 ```
 
 ## 📂 Project Structure
