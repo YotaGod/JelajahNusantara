@@ -12,7 +12,7 @@
 A comprehensive web platform to explore tourist destinations in Indonesia. Helping travelers find attractive places based on islands, regions, categories, and user reviews, while providing a multi-tiered destination management system for Regional Admins and Super Admins.
 
 ## 🔗 Demo
-[https://jelajah-nusantara.vercel.app](https://jelajah-nusantara.vercel.app) *(Replace with the actual link if different)*
+https://jelajah-nusantara-six.vercel.app/
 
 ## ✨ Features
 - **Smart Search & Filters**: Dynamically search destinations by name, category, island, city/regency, and ticket price range.
