@@ -92,7 +92,10 @@ function LoginForm() {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Password</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <label className={styles.label} style={{ marginBottom: 0 }}>Password</label>
+              <Link href="/forgot-password" style={{ fontSize: '0.875rem', color: '#14B8A6', textDecoration: 'none', fontWeight: 600 }}>Lupa Password?</Link>
+            </div>
             <input 
               type="password" 
               name="password" 
