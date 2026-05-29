@@ -35,12 +35,14 @@ Platform web komprehensif untuk mengeksplorasi destinasi wisata di Indonesia. Me
 
 ## 📸 Screenshots
 <p align="center">
-  <img src="https://via.placeholder.com/400x250.png?text=Home+Page" width="48%" />
-  <img src="https://via.placeholder.com/400x250.png?text=Destination+Detail" width="48%" />
+  <img src="./img/Login.png" />
+  <img src="./img/Home Page .png" />
 </p>
 <p align="center">
-  <img src="https://via.placeholder.com/400x250.png?text=Admin+Dashboard" width="48%" />
-  <img src="https://via.placeholder.com/400x250.png?text=Proposals+System" width="48%" />
+  <img src="./img/Maps.png" width="48%" />
+  <img src="./img/Contact.png" width="48%" />
+  <img src="./img/Abous Us.png" width="48%" />
+  <img src="./img/Dashboard Admin.png" width="48%" />
 </p>
 
 ## 🚀 Installation
