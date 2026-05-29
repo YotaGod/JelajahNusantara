@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteReview } from '@/lib/api'
 import { Edit2, Trash2 } from 'lucide-react'
 import StarRating from './StarRating'
+import { getUserBadge } from '@/utils/badges'
 import styles from './Reviews.module.css'
 
 interface ReviewListProps {
@@ -57,9 +58,33 @@ export default function ReviewList({ destinationId, reviews, currentUserId, onEd
                   )}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span className={styles.userName}>
-                    {currentUserId ? (rev.user?.full_name || 'Pengguna Anonim') : 'Pengguna Anonim'}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <span className={styles.userName}>
+                      {currentUserId ? (rev.user?.full_name || 'Pengguna Anonim') : 'Pengguna Anonim'}
+                    </span>
+                    
+                    {/* User Badge Display */}
+                    {(() => {
+                      // Ambil total ulasan user dari Supabase relations (jika ada, default minimal 1 karena ini ulasannya)
+                      const reviewCount = rev.user?.reviews?.[0]?.count || 1;
+                      const badge = getUserBadge(reviewCount);
+                      const BadgeIcon = badge.icon;
+                      
+                      return (
+                        <div 
+                          className={styles.userBadge} 
+                          style={{ backgroundColor: badge.bg, color: badge.color }}
+                          title={`${reviewCount} Ulasan`}
+                        >
+                          <span className={styles.badgeIcon}>
+                            <BadgeIcon size={12} strokeWidth={2.5} />
+                          </span>
+                          {badge.name}
+                        </div>
+                      )
+                    })()}
+                  </div>
+                  
                   <span className={styles.reviewDate}>
                     {new Date(rev.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </span>

@@ -244,7 +244,7 @@ export async function getDestinationDetail(id: string) {
         rating, 
         comment, 
         created_at,
-        user:user_profiles(id, full_name, avatar_url)
+        user:user_profiles(id, full_name, avatar_url, reviews(count))
       )
     `)
     .eq('id', id)
