@@ -15,13 +15,17 @@ Platform web komprehensif untuk mengeksplorasi destinasi wisata di Indonesia. Me
 [https://jelajah-nusantara.vercel.app](https://jelajah-nusantara.vercel.app) *(Ganti dengan link asli jika berbeda)*
 
 ## ✨ Features
-- **Pencarian & Filter Cerdas**: Cari wisata berdasarkan nama, kategori, pulau, kota/kabupaten, dan kisaran harga tiket.
-- **Rekomendasi Terdekat**: Menampilkan destinasi wisata terdekat berdasarkan lokasi GPS pengguna saat ini.
-- **Manajemen Ulasan & Rating**: Pengguna dapat memberikan ulasan, mengunggah foto pengalaman, dan memberikan rating untuk setiap destinasi.
-- **Sistem Role Bertingkat**: Terdapat hak akses untuk `Visitor`, `User`, `Regional Admin`, dan `Super Admin`.
-- **Pengajuan Data (Proposals)**: Admin Regional dapat mengajukan daerah atau kategori wisata baru untuk disetujui oleh Super Admin.
-- **Integrasi Peta**: Menampilkan titik lokasi presisi menggunakan peta interaktif.
-- **Upload Gambar**: Mendukung pengunggahan foto destinasi langsung ke ImgBB.
+- **Pencarian & Filter Cerdas**: Cari wisata berdasarkan nama, kategori, pulau, kota/kabupaten, dan kisaran harga tiket secara dinamis.
+- **Rekomendasi Terdekat**: Menampilkan destinasi wisata terdekat berdasarkan koordinat GPS aktual pengguna.
+- **Manajemen Ulasan & Rating**: Pengguna dapat memberikan ulasan dengan teks, memberikan rating bintang, dan mengunggah foto langsung.
+- **Gamifikasi "User Badges"**: Sistem lencana otomatis (Langkah Awal, Sang Pengembara, Petualang Handal, Ahli Jelajah, Pemandu Nusantara, hingga Legenda Penjelajah) berdasarkan keaktifan pengguna menulis ulasan.
+- **Manajemen Profil & Foto**: Pengguna dapat memperbarui informasi pribadi dan mengubah foto profil langsung yang akan ditampilkan pada setiap ulasan mereka.
+- **Layanan Kontak & Masukan**: Halaman pengiriman keluhan atau saran langsung bagi pengguna terautentikasi untuk ditinjau oleh Admin.
+- **Pemulihan Akun (Forgot & Update Password)**: Alur pemulihan kata sandi yang aman dan terintegrasi otomatis dengan email melalui Supabase Auth.
+- **Sistem Role Bertingkat**: Pembagian hak akses yang jelas antara `Visitor`, `User`, `Regional Admin`, dan `Super Admin`.
+- **Pengajuan Data (Proposals)**: Mekanisme pengajuan daerah atau kategori wisata baru oleh Regional Admin untuk disetujui Super Admin sebelum tampil ke publik.
+- **Integrasi Peta**: Navigasi dan visualisasi lokasi presisi destinasi menggunakan peta interaktif.
+- **Keamanan & RLS Terjamin**: Perlindungan dari manipulasi hak akses ilegal menggunakan PostgreSQL Triggers dan pengunggahan gambar aman via Server-Side API.
 
 ## 🛠️ Tech Stack
 | Bagian | Teknologi |
