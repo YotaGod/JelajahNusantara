@@ -52,6 +52,9 @@ Platform web komprehensif untuk mengeksplorasi destinasi wisata di Indonesia. Me
 
 ## 🚀 Installation
 
+> [!NOTE]
+> Panduan instalasi, setup database Supabase, konfigurasi pihak ketiga, dan cara deploy lengkap dapat dilihat pada file **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**.
+
 Ikuti langkah-langkah di bawah ini untuk menjalankan project secara lokal:
 
 **1. Clone Repository**

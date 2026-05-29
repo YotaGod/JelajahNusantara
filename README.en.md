@@ -52,6 +52,9 @@ https://jelajah-nusantara-six.vercel.app/
 
 ## 🚀 Installation
 
+> [!NOTE]
+> The complete installation, Supabase database setup, third-party configurations, and deployment guide can be found in the **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** file.
+
 Follow the steps below to run the project locally:
 
 **1. Clone the Repository**
