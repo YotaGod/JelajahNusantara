@@ -492,3 +492,15 @@ export async function submitFeedback(
   if (error) throw error
   return data
 }
+
+export async function updateUserAvatar(userId: string, avatarUrl: string) {
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .update({ avatar_url: avatarUrl })
+    .eq('id', userId)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}

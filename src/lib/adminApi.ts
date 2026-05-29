@@ -90,24 +90,18 @@ export async function deleteDestination(id: string) {
 }
 
 export async function uploadImageToImgBB(file: File) {
-  const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY
-  if (!apiKey) throw new Error("ImgBB API key is missing")
-
   const formData = new FormData()
   formData.append('image', file)
 
-  const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+  const res = await fetch('/api/upload', {
     method: 'POST',
     body: formData
   })
 
   const data = await res.json()
-  if (!data.success) throw new Error(data.error?.message || "Failed to upload image")
+  if (!res.ok) throw new Error(data.error || "Failed to upload image")
 
-  // Replace i.ibb.co with i.ibb.co.com because i.ibb.co is often blocked by Indonesian ISPs
-  const url = data.data.url.replace('i.ibb.co/', 'i.ibb.co.com/')
-
-  return url
+  return data.url
 }
 
 export async function saveDestination(destId: string | null, payload: any, photos: any[], userId: string) {

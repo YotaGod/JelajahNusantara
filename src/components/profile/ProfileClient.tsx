@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { getUserProfile, getUserStats, getUserFavorites, getCities, updateUserHomeCity, deleteOwnAccount } from '@/lib/api'
-import { User, Mail, Shield, Calendar, Star, Heart, MessageSquare, LogOut, Edit, MapPin } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getUserProfile, getUserStats, getUserFavorites, getCities, updateUserHomeCity, deleteOwnAccount, updateUserAvatar } from '@/lib/api'
+import { uploadImageToImgBB } from '@/lib/adminApi'
+import { User, Mail, Shield, Calendar, Star, Heart, MessageSquare, LogOut, Edit, MapPin, Loader2 } from 'lucide-react'
 import DestinationCard from '@/components/home/DestinationCard'
 import { useFavorites } from '@/hooks/useFavorites'
 import Link from 'next/link'
@@ -11,6 +12,9 @@ import { createClient } from '@/utils/supabase/client'
 import styles from './Profile.module.css'
 
 export default function ProfileClient({ userId, email }: { userId: string, email: string }) {
+  const queryClient = useQueryClient()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const { data: profile, isLoading: isProfileLoading } = useQuery({
     queryKey: ['profile', userId],
     queryFn: () => getUserProfile(userId),
@@ -32,6 +36,25 @@ export default function ProfileClient({ userId, email }: { userId: string, email
   const [cities, setCities] = useState<any[]>([])
   const [selectedCity, setSelectedCity] = useState('')
   const [isSavingCity, setIsSavingCity] = useState(false)
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploadingAvatar(true)
+    try {
+      const imageUrl = await uploadImageToImgBB(file)
+      await updateUserAvatar(userId, imageUrl)
+      queryClient.invalidateQueries({ queryKey: ['profile', userId] })
+      alert('Foto profil berhasil diperbarui!')
+    } catch (error: any) {
+      console.error('Error updating avatar:', error)
+      alert(error.message || 'Gagal memperbarui foto profil.')
+    } finally {
+      setIsUploadingAvatar(false)
+    }
+  }
 
   useEffect(() => {
     getCities().then(data => setCities(data || []))
@@ -107,11 +130,19 @@ export default function ProfileClient({ userId, email }: { userId: string, email
               )}
               <button 
                 className={styles.editAvatarBtn} 
-                title="Fitur ubah foto segera hadir"
-                onClick={() => alert("Fitur edit profil akan hadir di tahap selanjutnya.")}
+                title="Ubah Foto Profil"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploadingAvatar}
               >
-                <Edit size={14} />
+                {isUploadingAvatar ? <Loader2 size={14} className={styles.spinner} /> : <Edit size={14} />}
               </button>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleAvatarChange} 
+                accept="image/*" 
+                style={{ display: 'none' }} 
+              />
             </div>
             
             <h2 className={styles.profileName}>{profile?.full_name || 'Pengguna Tanpa Nama'}</h2>

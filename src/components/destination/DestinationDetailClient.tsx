@@ -133,10 +133,20 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
         <Link href="/" className={`btn btn-ghost ${styles.backBtn}`}>
           <ArrowLeft size={20} /> Kembali
         </Link>
-        {mainImage ? (
-          <>
-            <div className={styles.heroImageBlur} style={{ backgroundImage: `url(${mainImage})` }}></div>
-            <img src={mainImage} alt={dest.name} className={styles.heroImage} />
+        {dest.photos && dest.photos.length > 0 ? (
+          <div className={styles.sliderViewport}>
+            {/* The sliding track containing all images */}
+            <div 
+              className={styles.sliderTrack} 
+              style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
+            >
+              {dest.photos.map((photo: any, index: number) => (
+                <div key={photo.id} className={styles.slideItem}>
+                  <div className={styles.heroImageBlur} style={{ backgroundImage: `url(${photo.image_url})` }}></div>
+                  <img src={photo.image_url} alt={`${dest.name} - ${index + 1}`} className={styles.heroImage} />
+                </div>
+              ))}
+            </div>
             
             {hasMultipleImages && (
               <>
@@ -177,7 +187,7 @@ export default function DestinationDetailClient({ destinationId, userId }: { des
                 </div>
               </>
             )}
-          </>
+          </div>
         ) : (
           <div className={styles.heroPlaceholder}>Tidak ada foto</div>
         )}

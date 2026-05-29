@@ -8,9 +8,10 @@ import styles from './Header.module.css'
 interface UserDropdownProps {
   user: any
   isAdmin: boolean
+  avatarUrl?: string | null
 }
 
-export default function UserDropdown({ user, isAdmin }: UserDropdownProps) {
+export default function UserDropdown({ user, isAdmin, avatarUrl }: UserDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -27,7 +28,11 @@ export default function UserDropdown({ user, isAdmin }: UserDropdownProps) {
   return (
     <div className={styles.userPill} onClick={() => setIsOpen(!isOpen)} ref={dropdownRef} style={{ cursor: 'pointer' }}>
       <div className={styles.avatar}>
-        <User size={16} color="var(--color-bg)" />
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+        ) : (
+          <User size={16} color="var(--color-bg)" />
+        )}
       </div>
       <span className={styles.userName}>
         {user.user_metadata?.full_name?.split(' ')[0] || user.email?.split('@')[0]}

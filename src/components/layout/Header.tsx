@@ -12,14 +12,16 @@ export default async function Header() {
   } = await supabase.auth.getUser()
 
   let userRole = 'visitor'
+  let avatarUrl: string | null = null
   if (user) {
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('role')
+      .select('role, avatar_url')
       .eq('id', user.id)
       .single()
     if (profile) {
       userRole = profile.role
+      avatarUrl = profile.avatar_url
     }
   }
 
@@ -48,7 +50,7 @@ export default async function Header() {
         {/* Right Nav */}
         <div className={styles.rightNav}>
           {user ? (
-            <UserDropdown user={user} isAdmin={isAdmin} />
+            <UserDropdown user={user} isAdmin={isAdmin} avatarUrl={avatarUrl} />
           ) : (
             <div className={styles.userMenu}>
               <Link href="/login" className={styles.navLink}>
