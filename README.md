@@ -1,6 +1,6 @@
 # 🏝️ Jelajah Nusantara
 
-![Jelajah Nusantara Banner](https://via.placeholder.com/1200x400.png?text=Jelajah+Nusantara)
+![Jelajah Nusantara Banner](./public/banner.png)
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-16.2.6-black?style=for-the-badge&logo=next.js" alt="Next.js" />
