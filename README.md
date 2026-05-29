@@ -44,8 +44,8 @@ Platform web komprehensif untuk mengeksplorasi destinasi wisata di Indonesia. Me
 </p>
 <p align="center">
   <img src="./img/Maps.png" width="48%" />
-  <img src="./img/Contact.png" width="48%" />
   <img src="./img/Abous Us.png" width="48%" />
+  <img src="./img/Contact.png" width="48%" />
   <img src="./img/Dashboard Admin.png" width="48%" />
 </p>
 
