@@ -61,7 +61,7 @@ export async function getDestinations({ page, search, category, island, city, pr
   }
 
   if (category) query = query.eq('category_id', category)
-  if (island) query = query.eq('city.island_id', island)
+  if (island) query = query.eq('cities.island_id', island)
   if (city) query = query.eq('city_id', city)
   if (price) {
     if (price === 'free') {
