@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getAdminCategories, getAdminCities, addCategory, addCity, updateProposalStatus } from '@/lib/adminApi'
+import { getAdminCategories, getAdminCities, addCategory, addCity, updateProposalStatus, updateCategory, deleteCategory, updateCity, deleteCity } from '@/lib/adminApi'
 import { getUserProfile, getIslands } from '@/lib/api'
 import { createClient } from '@/utils/supabase/client'
-import { Check, X, Plus, Tag, MapPin } from 'lucide-react'
+import { Check, X, Plus, Tag, MapPin, Pencil } from 'lucide-react'
 
 export default function AdminProposals() {
   const [activeTab, setActiveTab] = useState<'categories' | 'cities'>('categories')
@@ -16,6 +16,7 @@ export default function AdminProposals() {
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingItem, setEditingItem] = useState<{id:string, name:string, province?:string, island_id?:string} | null>(null)
   const [newItemName, setNewItemName] = useState('')
   const [newCityProvince, setNewCityProvince] = useState('')
   const [newCityIsland, setNewCityIsland] = useState('')
@@ -70,22 +71,63 @@ export default function AdminProposals() {
     }
   }
 
+  const handleEditClick = (type: 'category' | 'city', item: any) => {
+    setEditingItem(item)
+    setNewItemName(item.name)
+    if (type === 'city') {
+      setNewCityProvince(item.province || '')
+      setNewCityIsland(item.island_id || '')
+    }
+    setIsModalOpen(true)
+  }
+
+  const handleDelete = async (type: 'category' | 'city', id: string, name: string) => {
+    if (!confirm(`Apakah Anda yakin ingin menghapus ${type === 'category' ? 'kategori' : 'daerah'} "${name}"?`)) return
+    try {
+      if (type === 'category') {
+        await deleteCategory(id)
+      } else {
+        await deleteCity(id)
+      }
+      loadData()
+      alert('Berhasil dihapus!')
+    } catch (error) {
+      alert('Gagal menghapus. Pastikan data tidak sedang digunakan oleh destinasi lain.')
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSaving(true)
     try {
-      const status = profile?.role === 'super_admin' ? 'approved' : 'pending'
-      if (activeTab === 'categories') {
-        await addCategory(newItemName, status)
-      } else {
-        if (!newCityProvince || !newCityIsland) {
-          alert('Provinsi dan Pulau harus diisi untuk Kota/Kabupaten.')
-          setIsSaving(false)
-          return
+      if (editingItem) {
+        // Edit Mode
+        if (activeTab === 'categories') {
+          await updateCategory(editingItem.id, newItemName)
+        } else {
+          if (!newCityProvince || !newCityIsland) {
+            alert('Provinsi dan Pulau harus diisi untuk Kota/Kabupaten.')
+            setIsSaving(false)
+            return
+          }
+          await updateCity(editingItem.id, newItemName, newCityProvince, newCityIsland)
         }
-        await addCity(newItemName, newCityProvince, newCityIsland, status)
+      } else {
+        // Add Mode
+        const status = profile?.role === 'super_admin' ? 'approved' : 'pending'
+        if (activeTab === 'categories') {
+          await addCategory(newItemName, status)
+        } else {
+          if (!newCityProvince || !newCityIsland) {
+            alert('Provinsi dan Pulau harus diisi untuk Kota/Kabupaten.')
+            setIsSaving(false)
+            return
+          }
+          await addCity(newItemName, newCityProvince, newCityIsland, status)
+        }
       }
       setIsModalOpen(false)
+      setEditingItem(null)
       setNewItemName('')
       setNewCityProvince('')
       setNewCityIsland('')
@@ -123,12 +165,19 @@ export default function AdminProposals() {
               </td>
               {isSuperAdmin && (
                 <td>
-                  {c.status === 'pending' && (
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button className="iconBtn resolved" title="Setujui" onClick={() => handleApprove('category', c.id)}><Check size={16}/></button>
-                      <button className="iconBtn rejected" title="Tolak" onClick={() => handleReject('category', c.id)}><X size={16}/></button>
-                    </div>
-                  )}
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    {c.status === 'pending' ? (
+                      <>
+                        <button className="iconBtn resolved" title="Setujui" onClick={() => handleApprove('category', c.id)}><Check size={16}/></button>
+                        <button className="iconBtn rejected" title="Tolak" onClick={() => handleReject('category', c.id)}><X size={16}/></button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="iconBtn" style={{ color: '#14B8A6' }} title="Edit" onClick={() => handleEditClick('category', c)}><Pencil size={16}/></button>
+                        <button className="iconBtn rejected" title="Hapus" onClick={() => handleDelete('category', c.id, c.name)}><X size={16}/></button>
+                      </>
+                    )}
+                  </div>
                 </td>
               )}
             </tr>
@@ -164,12 +213,19 @@ export default function AdminProposals() {
               </td>
               {isSuperAdmin && (
                 <td>
-                  {c.status === 'pending' && (
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button className="iconBtn resolved" title="Setujui" onClick={() => handleApprove('city', c.id)}><Check size={16}/></button>
-                      <button className="iconBtn rejected" title="Tolak" onClick={() => handleReject('city', c.id)}><X size={16}/></button>
-                    </div>
-                  )}
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    {c.status === 'pending' ? (
+                      <>
+                        <button className="iconBtn resolved" title="Setujui" onClick={() => handleApprove('city', c.id)}><Check size={16}/></button>
+                        <button className="iconBtn rejected" title="Tolak" onClick={() => handleReject('city', c.id)}><X size={16}/></button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="iconBtn" style={{ color: '#14B8A6' }} title="Edit" onClick={() => handleEditClick('city', c)}><Pencil size={16}/></button>
+                        <button className="iconBtn rejected" title="Hapus" onClick={() => handleDelete('city', c.id, c.name)}><X size={16}/></button>
+                      </>
+                    )}
+                  </div>
                 </td>
               )}
             </tr>
@@ -198,7 +254,16 @@ export default function AdminProposals() {
           </button>
         </div>
         
-        <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
+        <button 
+          className="btn btn-primary" 
+          onClick={() => {
+            setEditingItem(null)
+            setNewItemName('')
+            setNewCityProvince('')
+            setNewCityIsland('')
+            setIsModalOpen(true)
+          }}
+        >
           <Plus size={18} /> {isSuperAdmin ? 'Tambah' : 'Ajukan'} {activeTab === 'categories' ? 'Kategori' : 'Daerah'} Baru
         </button>
       </div>
@@ -209,8 +274,8 @@ export default function AdminProposals() {
         <div className="modalOverlay" onClick={() => setIsModalOpen(false)}>
           <div className="modalContent animate-fade-in" onClick={e => e.stopPropagation()}>
             <div className="modalHeader">
-              <h3>{isSuperAdmin ? 'Tambah' : 'Ajukan'} {activeTab === 'categories' ? 'Kategori' : 'Daerah'}</h3>
-              <button className="closeBtn" onClick={() => setIsModalOpen(false)}><X size={20}/></button>
+              <h3>{editingItem ? 'Edit' : (isSuperAdmin ? 'Tambah' : 'Ajukan')} {activeTab === 'categories' ? 'Kategori' : 'Daerah'}</h3>
+              <button className="closeBtn" onClick={() => { setIsModalOpen(false); setEditingItem(null); }}><X size={20}/></button>
             </div>
             <div className="modalBody">
               <form id="addForm" onSubmit={handleSubmit} className="formGrid" style={{ gridTemplateColumns: '1fr' }}>

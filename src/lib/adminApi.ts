@@ -417,4 +417,28 @@ export async function getAdminFeedbacks(adminRole: string, regionCityId: string 
   }
 }
 
+export async function updateCity(id: string, name: string, province: string, islandId: string | null) {
+  const { data, error } = await supabase.from('cities').update({ name, province, island_id: islandId }).eq('id', id).select().single()
+  if (error) throw error
+  return data
+}
+
+export async function deleteCity(id: string) {
+  const { error } = await supabase.from('cities').delete().eq('id', id)
+  if (error) throw error
+  return true
+}
+
+export async function updateCategory(id: string, name: string) {
+  const { data, error } = await supabase.from('categories').update({ name }).eq('id', id).select().single()
+  if (error) throw error
+  return data
+}
+
+export async function deleteCategory(id: string) {
+  const { error } = await supabase.from('categories').delete().eq('id', id)
+  if (error) throw error
+  return true
+}
+
 
