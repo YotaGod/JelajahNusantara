@@ -141,13 +141,13 @@ input, select, textarea {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-tosca-main), var(--color-ocean-main));
+  background-color: var(--color-tosca-main);
   color: white;
   box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--color-tosca-dark), var(--color-ocean-dark));
+  background-color: var(--color-tosca-dark);
   box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }

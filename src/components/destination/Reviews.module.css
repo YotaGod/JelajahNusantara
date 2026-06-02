@@ -200,7 +200,7 @@
   align-items: center;
   justify-content: center;
   margin: 2.5rem auto 0;
-  background: linear-gradient(135deg, #14B8A6, #0284C7);
+  background-color: #14B8A6;
   color: #ffffff;
   border: none;
   border-radius: 0.75rem;
@@ -213,6 +213,7 @@
 }
 
 .writeReviewBtn:hover {
+  background-color: #0D9488;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(20, 184, 166, 0.4);
 }

@@ -212,7 +212,7 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.875rem;
-  background: linear-gradient(135deg, #14B8A6, #0284C7);
+  background-color: #14B8A6;
   border: none;
   border-radius: 0.75rem;
   color: #ffffff;
@@ -224,6 +224,7 @@
 }
 
 .btnSubmit:hover:not(:disabled) {
+  background-color: #0D9488;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(20, 184, 166, 0.45);
 }
@@ -326,13 +327,14 @@
 }
 
 .btnPrimary {
-  background: linear-gradient(135deg, #14B8A6, #0284C7);
+  background-color: #14B8A6;
   color: #ffffff;
   border: none;
   box-shadow: 0 4px 12px rgba(20, 184, 166, 0.2);
 }
 
 .btnPrimary:hover {
+  background-color: #0D9488;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(20, 184, 166, 0.35);
 }
