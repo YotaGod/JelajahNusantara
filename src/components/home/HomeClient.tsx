@@ -119,7 +119,7 @@ export default function HomeClient() {
           />
         </div>
 
-        <NearbyRecommendations />
+        {!(search || category || island || city || price) && <NearbyRecommendations />}
 
         <div className="container">
           <h2 className="animate-fade-in-up" style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '1.5rem', marginTop: '1rem', color: '#f8fafc' }}>Wisata Lainnya</h2>
