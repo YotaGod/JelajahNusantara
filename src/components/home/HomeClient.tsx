@@ -61,8 +61,33 @@ export default function HomeClient() {
     [searchParams]
   )
 
-  const handleFilterChange = (key: string, value: string) => {
-    router.push('?' + createQueryString(key, value), { scroll: false })
+  const handleFilterChange = (keyOrUpdates: string | Record<string, string>, value?: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (typeof keyOrUpdates === 'string') {
+      const key = keyOrUpdates
+      const val = value || ''
+      if (val) {
+        params.set(key, val)
+      } else {
+        params.delete(key)
+      }
+      if (key !== 'page') {
+        params.set('page', '1')
+      }
+    } else {
+      const updates = keyOrUpdates
+      Object.entries(updates).forEach(([k, v]) => {
+        if (v) {
+          params.set(k, v)
+        } else {
+          params.delete(k)
+        }
+      })
+      if (!updates.hasOwnProperty('page')) {
+        params.set('page', '1')
+      }
+    }
+    router.push('?' + params.toString(), { scroll: false })
   }
 
   const handleReset = () => {

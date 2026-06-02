@@ -14,7 +14,7 @@ interface SearchFilterProps {
   initialIsland: string
   initialCity: string
   initialPrice: string
-  onFilterChange: (key: string, value: string) => void
+  onFilterChange: (keyOrUpdates: any, value?: string) => void
   onReset: () => void
 }
 
@@ -65,8 +65,7 @@ export default function SearchFilter({
         className={styles.selectInput}
         value={initialIsland}
         onChange={(e) => {
-          onFilterChange('island', e.target.value)
-          onFilterChange('city', '') 
+          onFilterChange({ island: e.target.value, city: '' })
         }}
         suppressHydrationWarning
       >
@@ -120,8 +119,15 @@ export default function SearchFilter({
         <option value="100+">&gt; Rp 100k</option>
       </select>
 
-      <button className={styles.searchBtn} onClick={() => {}} suppressHydrationWarning>
-        Cari
+      <button 
+        className={styles.searchBtn} 
+        onClick={onReset} 
+        suppressHydrationWarning
+        style={{ backgroundColor: '#ef4444' }}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#dc2626')}
+        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ef4444')}
+      >
+        Hapus
       </button>
     </div>
   )
