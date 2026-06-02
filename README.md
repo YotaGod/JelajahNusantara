@@ -12,7 +12,7 @@
 Platform web komprehensif untuk mengeksplorasi destinasi wisata di Indonesia. Membantu wisatawan menemukan tempat menarik berdasarkan pulau, daerah, kategori, dan ulasan pengguna, sekaligus menyediakan sistem manajemen destinasi berlapis untuk Admin Regional dan Super Admin.
 
 ## 🔗 Demo
-[https://jelajah-nusantara.vercel.app](https://jelajah-nusantara.vercel.app) *(Ganti dengan link asli jika berbeda)*
+https://jelajah-nusantara-six.vercel.app/
 
 ## ✨ Features
 - **Pencarian & Filter Cerdas**: Cari wisata berdasarkan nama, kategori, pulau, kota/kabupaten, dan kisaran harga tiket secara dinamis.
