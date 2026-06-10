@@ -1,0 +1,102 @@
+name: Wake Supabase
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # Runs once per day at 06:00 UTC (13:00 WIB)
+  workflow_dispatch:       # Allows manual runs from the Actions tab
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate SUPABASE_PROJECTS_JSON secret exists
+        run: |
+          if [ -z "${{ secrets.SUPABASE_PROJECTS_JSON }}" ]; then
+            echo "❌ Secret SUPABASE_PROJECTS_JSON is not set."
+            echo "Go to Settings > Secrets and variables > Actions and add it."
+            exit 1
+          fi
+
+      - name: Perform Real Query & Health Check
+        env:
+          SUPABASE_PROJECTS_JSON: ${{ secrets.SUPABASE_PROJECTS_JSON }}
+        run: |
+          # Install jq for JSON parsing
+          sudo apt-get update -y > /dev/null
+          sudo apt-get install -y jq > /dev/null
+
+          LENGTH=$(echo "$SUPABASE_PROJECTS_JSON" | jq '. | length')
+          echo "🔍 Found $LENGTH Supabase project(s) to ping."
+
+          if [ "$LENGTH" -eq 0 ]; then
+            echo "⚠️ No projects defined in SUPABASE_PROJECTS_JSON."
+            exit 0
+          fi
+
+          for i in $(seq 0 $((LENGTH - 1))); do
+            URL=$(echo "$SUPABASE_PROJECTS_JSON" | jq -r ".[$i].url")
+            KEY=$(echo "$SUPABASE_PROJECTS_JSON" | jq -r ".[$i].anon_key")
+            TABLE=$(echo "$SUPABASE_PROJECTS_JSON" | jq -r ".[$i].table")
+
+            echo "--------------------------------------------------"
+            echo "Processing project index $i..."
+
+            if [ -z "$URL" ] || [ "$URL" = "null" ]; then
+              echo "⚠️ Skipping project at index $i - missing url."
+              continue
+            fi
+
+            if [ -z "$KEY" ] || [ "$KEY" = "null" ]; then
+              echo "⚠️ Skipping $URL - missing anon_key."
+              continue
+            fi
+
+            if [ -z "$TABLE" ] || [ "$TABLE" = "null" ]; then
+              echo "⚠️ Warning: 'table' field not specified for $URL. Defaulting to 'destinations'."
+              TABLE="destinations"
+            fi
+
+            # Real database query URL via PostgREST
+            # We select one ID to trigger a read command in the DB
+            DB_URL="${URL%/}/rest/v1/${TABLE}?select=id&limit=1"
+            echo "📡 Performing database query via: $DB_URL"
+
+            # Allow curl to fail without stopping the execution
+            set +e
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "apikey: $KEY" \
+              -H "Authorization: Bearer $KEY" \
+              "$DB_URL")
+            CURL_EXIT=$?
+            set -e
+
+            if [ "$CURL_EXIT" -ne 0 ]; then
+              echo "❌ Curl connection failed for database query on $URL (exit code $CURL_EXIT)."
+            elif [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+              echo "✅ Database query successful: $URL responded with HTTP $HTTP_CODE"
+            elif [ "$HTTP_CODE" -eq 404 ]; then
+              echo "⚠️ Database responded with HTTP 404. The table '$TABLE' was not found, but the Database is ACTIVE!"
+            else
+              echo "❌ Database query failed: $URL responded with HTTP $HTTP_CODE"
+            fi
+
+            # Backup: Ping /auth/v1/health
+            HEALTH_URL="${URL%/}/auth/v1/health"
+            echo "📡 Performing backup health check via: $HEALTH_URL"
+
+            set +e
+            HEALTH_HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "apikey: $KEY" \
+              "$HEALTH_URL")
+            HEALTH_CURL_EXIT=$?
+            set -e
+
+            if [ "$HEALTH_CURL_EXIT" -ne 0 ]; then
+              echo "❌ Backup health check curl failed for $URL (exit code $HEALTH_CURL_EXIT)."
+            elif [ "$HEALTH_HTTP_CODE" -ge 200 ] && [ "$HEALTH_HTTP_CODE" -lt 300 ]; then
+              echo "✅ Backup health check successful: $URL responded with HTTP $HEALTH_HTTP_CODE"
+            else
+              echo "❌ Backup health check failed: $URL responded with HTTP $HEALTH_HTTP_CODE"
+            fi
+          done
