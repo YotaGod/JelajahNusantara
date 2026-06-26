@@ -359,3 +359,16 @@ BEGIN
   DELETE FROM auth.users WHERE id = auth.uid();
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 8. Table for keep-alive logs (log_activity)
+CREATE TABLE IF NOT EXISTS public.log_activity (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tournaments_nama TEXT DEFAULT 'SYSTEM_WAKEUP',
+    deskripsi TEXT,
+    timestamp TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.log_activity ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public insert to log_activity" ON public.log_activity FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public select from log_activity" ON public.log_activity FOR SELECT USING (true);
+CREATE POLICY "Allow public delete from log_activity" ON public.log_activity FOR DELETE USING (true);
