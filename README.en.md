@@ -1,5 +1,7 @@
 # 🏝️ Jelajah Nusantara
 
+[🇮🇩 Bahasa Indonesia](./README.md) | 🇺🇸 English
+
 ![Jelajah Nusantara Banner](./public/banner.png)
 
 <p align="center">
@@ -9,13 +11,19 @@
   <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
 </p>
 
-A comprehensive web platform to explore tourist destinations in Indonesia. Helping travelers find attractive places based on islands, regions, categories, and user reviews, while providing a multi-tiered destination management system for Regional Admins and Super Admins.
+A comprehensive web platform to explore tourist destinations in Indonesia. Helping travelers discover attractive places based on islands, regions, categories, and user reviews, while providing a multi-tiered destination management system for Regional Admins and Super Admins.
+
+> 📖 **Complete Documentation**: The comprehensive database setup, API integrations, and local installation instructions can be found in the **[docs/SETUP_GUIDE.en.md](./docs/SETUP_GUIDE.en.md)** file.
+
+---
 
 ## 🔗 Demo
-https://jelajah-nusantara-six.vercel.app/
+[https://jelajah-nusantara-six.vercel.app](https://jelajah-nusantara-six.vercel.app)
+
+---
 
 ## ✨ Features
-- **Smart Search & Filters**: Dynamically search destinations by name, category, island, city/regency, and ticket price range.
+- **Smart Search & Filters**: Discover destinations through dynamic search and filters based on name, category, island, city/regency, and ticket price range.
 - **Nearby Recommendations**: Displays tourist destinations closest to the user's actual GPS coordinates.
 - **Review & Rating Management**: Users can leave text reviews, star ratings, and upload photos directly.
 - **Gamification "User Badges"**: Automatic badge system (Langkah Awal, Sang Pengembara, Petualang Handal, Ahli Jelajah, Pemandu Nusantara, to Legenda Penjelajah) based on user review contributions.
@@ -28,6 +36,8 @@ https://jelajah-nusantara-six.vercel.app/
 - **5-Day Weather Forecast**: Live weather updates and 5-day weather forecasts powered by the OpenWeatherMap API for each destination.
 - **Advanced Security & RLS**: Database security is reinforced using PostgreSQL Triggers to block unauthorized role modifications, and secure image uploads via a Server-Side API route.
 
+---
+
 ## 🛠️ Tech Stack
 | Component | Technology |
 | ------ | ------ |
@@ -37,6 +47,8 @@ https://jelajah-nusantara-six.vercel.app/
 | **Database & Auth** | Supabase (PostgreSQL) |
 | **Image Hosting** | ImgBB |
 | **Deployment** | Vercel |
+
+---
 
 ## 📸 Screenshots
 <p align="center">
@@ -50,10 +62,9 @@ https://jelajah-nusantara-six.vercel.app/
   <img src="./img/Dashboard Admin.png" width="48%" />
 </p>
 
-## 🚀 Installation
+---
 
-> [!NOTE]
-> The complete installation, Supabase database setup, third-party configurations, and deployment guide can be found in the **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** file.
+## 🚀 Installation
 
 Follow the steps below to run the project locally:
 
@@ -80,6 +91,8 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
+---
+
 ## 🔐 Environment Variables
 
 Example `.env.example` file:
@@ -96,10 +109,13 @@ IMGBB_API_KEY=your-imgbb-api-key
 OPENWEATHER_API_KEY=your-openweather-api-key
 ```
 
+---
+
 ## 📂 Project Structure
 
 ```text
 JelajahNusantara/
+├── docs/                   # Architecture, Guidelines, Roadmap, & Changelog Documents
 ├── src/
 │   ├── app/                # Next.js App Router (Pages & Layouts)
 │   │   ├── admin/          # Admin Dashboard (Users, Proposals, Destinations)
@@ -113,8 +129,10 @@ JelajahNusantara/
 ├── .env.example            # Environment variables template
 ├── next.config.mjs         # Next.js configuration
 ├── package.json            # Project dependencies and scripts
-└── README.md               # Project documentation (Indonesian)
+└── README.md               # Project documentation
 ```
+
+---
 
 ## 📜 Available Scripts
 
@@ -123,27 +141,30 @@ JelajahNusantara/
 - `npm run start`: Starts the production server after building.
 - `npm run lint`: Performs lint checks with ESLint.
 
+---
+
 ## ☁️ Deployment
 
 This project is configured for seamless deployment to [Vercel](https://vercel.com/):
 
 1. Push your code to your GitHub repository.
 2. Create a new project on Vercel and connect it to the repository.
-3. Configure the required `Environment Variables` (Supabase URL & Key, ImgBB API Key) in Vercel settings.
-4. Click **Deploy**. Vercel will automatically build the site with each push to the main branch.
+3. Configure the required `Environment Variables` (Supabase URL & Key, ImgBB API Key, OpenWeather API Key) in Vercel settings.
+4. Klik **Deploy**. Vercel will automatically build the site with each push to the main branch.
+
+---
 
 ## 🤝 Contributing
 
-Contributions are always welcome! If you want to add features or fix bugs:
-1. Fork this repository.
-2. Create a new branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+Contributions are always welcome! Git branching strategies and coding standards can be reviewed in the **[docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)** document.
+
+---
 
 ## 📄 License
 
 Distributed under the **MIT License**. See `LICENSE` for more information.
+
+---
 
 ## 👨‍💻 Author
 

@@ -1,5 +1,7 @@
 # 🏝️ Jelajah Nusantara
 
+🇮🇩 Bahasa Indonesia | [🇺🇸 English](./README.en.md)
+
 ![Jelajah Nusantara Banner](./public/banner.png)
 
 <p align="center">
@@ -11,14 +13,20 @@
 
 Platform web komprehensif untuk mengeksplorasi destinasi wisata di Indonesia. Membantu wisatawan menemukan tempat menarik berdasarkan pulau, daerah, kategori, dan ulasan pengguna, sekaligus menyediakan sistem manajemen destinasi berlapis untuk Admin Regional dan Super Admin.
 
+> 📖 **Dokumentasi Lengkap**: Panduan instalasi dan setup detail database Supabase serta integrasi API eksternal dapat dilihat pada file **[docs/SETUP_GUIDE.md](./docs/SETUP_GUIDE.md)**.
+
+---
+
 ## 🔗 Demo
-https://jelajah-nusantara-six.vercel.app/
+[https://jelajah-nusantara-six.vercel.app](https://jelajah-nusantara-six.vercel.app)
+
+---
 
 ## ✨ Features
 - **Pencarian & Filter Cerdas**: Cari wisata berdasarkan nama, kategori, pulau, kota/kabupaten, dan kisaran harga tiket secara dinamis.
 - **Rekomendasi Terdekat**: Menampilkan destinasi wisata terdekat berdasarkan koordinat GPS aktual pengguna.
 - **Manajemen Ulasan & Rating**: Pengguna dapat memberikan ulasan dengan teks, memberikan rating bintang, dan mengunggah foto langsung.
-- **Gamifikasi "User Badges"**: Sistem lencana otomatis (Langkah Awal, Sang Pengembara, Petualang Handal, Ahli Jelajah, Pemandu Nusantara, hingga Legenda Penjelajah) berdasarkan keaktifan pengguna menulis ulasan.
+- **Gamifikasi "User Badges"**: Sistem lencana otomatis (Langkah Awal, Sang Pengembara, Petualang Handal, Ahli Jelajah, Pemandu Nusantara, hingga Legenda Penjelajah) berdasarkan keaktifan ulasan pengguna.
 - **Manajemen Profil & Foto**: Pengguna dapat memperbarui informasi pribadi dan mengubah foto profil langsung yang akan ditampilkan pada setiap ulasan mereka.
 - **Layanan Kontak & Masukan**: Halaman pengiriman keluhan atau saran langsung bagi pengguna terautentikasi untuk ditinjau oleh Admin.
 - **Pemulihan Akun (Forgot & Update Password)**: Alur pemulihan kata sandi yang aman dan terintegrasi otomatis dengan email melalui Supabase Auth.
@@ -27,6 +35,8 @@ https://jelajah-nusantara-six.vercel.app/
 - **Integrasi Peta**: Navigasi dan visualisasi lokasi presisi destinasi menggunakan peta interaktif.
 - **Prakiraan Cuaca 5 Hari**: Integrasi data cuaca aktual dan prakiraan cuaca 5 hari ke depan menggunakan OpenWeatherMap API untuk membantu perencanaan perjalanan.
 - **Keamanan & RLS Terjamin**: Perlindungan dari manipulasi hak akses ilegal menggunakan PostgreSQL Triggers dan pengunggahan gambar aman via Server-Side API.
+
+---
 
 ## 🛠️ Tech Stack
 | Bagian | Teknologi |
@@ -38,6 +48,8 @@ https://jelajah-nusantara-six.vercel.app/
 | **Image Hosting** | ImgBB |
 | **Deployment** | Vercel |
 
+---
+
 ## 📸 Screenshots
 <p align="center">
   <img src="./img/Login.png" />
@@ -45,15 +57,14 @@ https://jelajah-nusantara-six.vercel.app/
 </p>
 <p align="center">
   <img src="./img/Maps.png" width="48%" />
-  <img src="./img/Abous Us.png" width="48%" />
   <img src="./img/Contact.png" width="48%" />
+  <img src="./img/Abous Us.png" width="48%" />
   <img src="./img/Dashboard Admin.png" width="48%" />
 </p>
 
-## 🚀 Installation
+---
 
-> [!NOTE]
-> Panduan instalasi, setup database Supabase, konfigurasi pihak ketiga, dan cara deploy lengkap dapat dilihat pada file **[SETUP_GUIDE.md](./SETUP_GUIDE.md)**.
+## 🚀 Installation
 
 Ikuti langkah-langkah di bawah ini untuk menjalankan project secara lokal:
 
@@ -80,6 +91,8 @@ npm run dev
 ```
 Buka [http://localhost:3000](http://localhost:3000) di browser untuk melihat hasilnya.
 
+---
+
 ## 🔐 Environment Variables
 
 Contoh file `.env.example`:
@@ -96,10 +109,13 @@ IMGBB_API_KEY=your-imgbb-api-key
 OPENWEATHER_API_KEY=your-openweather-api-key
 ```
 
+---
+
 ## 📂 Project Structure
 
 ```text
 JelajahNusantara/
+├── docs/                   # Dokumen Arsitektur, Panduan, Roadmap, & Changelog
 ├── src/
 │   ├── app/                # Next.js App Router (Pages & Layouts)
 │   │   ├── admin/          # Admin Dashboard (Users, Proposals, Destinations)
@@ -116,6 +132,8 @@ JelajahNusantara/
 └── README.md               # Project documentation
 ```
 
+---
+
 ## 📜 Available Scripts
 
 - `npm run dev`: Menjalankan *development server* di `localhost:3000`.
@@ -123,27 +141,30 @@ JelajahNusantara/
 - `npm run start`: Menjalankan aplikasi versi *production* yang sudah di-build.
 - `npm run lint`: Mengecek *error* pada kode dengan ESLint.
 
+---
+
 ## ☁️ Deployment
 
 Proyek ini telah dikonfigurasi agar sangat mudah di-*deploy* ke [Vercel](https://vercel.com/):
 
 1. *Push* kode ke repositori GitHub.
 2. Buat proyek baru di Vercel dan hubungkan dengan repositori tersebut.
-3. Masukkan `Environment Variables` yang dibutuhkan (Supabase URL & Key, ImgBB API Key) di pengaturan Vercel.
+3. Masukkan `Environment Variables` yang dibutuhkan (Supabase URL & Key, ImgBB API Key, OpenWeather API Key) di pengaturan Vercel.
 4. Klik **Deploy**. Vercel akan otomatis melakukan *build* setiap kali ada *commit* baru di *branch* utama.
+
+---
 
 ## 🤝 Contributing
 
-Kontribusi selalu diterima! Jika Anda ingin menambahkan fitur baru atau memperbaiki *bug*, silakan:
-1. *Fork* repositori ini
-2. Buat *branch* baru (`git checkout -b feature/AmazingFeature`)
-3. *Commit* perubahan Anda (`git commit -m 'Add some AmazingFeature'`)
-4. *Push* ke *branch* (`git push origin feature/AmazingFeature`)
-5. Buka sebuah *Pull Request*
+Kontribusi selalu diterima! Detail mengenai strategi git branch dan standar penulisan kode dapat dibaca di **[docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)**.
+
+---
 
 ## 📄 License
 
 Didistribusikan di bawah **MIT License**. Lihat `LICENSE` untuk informasi lebih lanjut.
+
+---
 
 ## 👨‍💻 Author
 
