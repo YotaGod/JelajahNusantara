@@ -61,7 +61,7 @@ jobs:
               -H "Authorization: Bearer $KEY" \
               -H "Content-Type: application/json" \
               -H "Prefer: return=minimal" \
-              -d '{"tournaments_nama": "SYSTEM_WAKEUP", "deskripsi": "Automated ping to keep project alive"}' \
+              -d '{"activity_name": "SYSTEM_WAKEUP", "deskripsi": "Automated ping to keep project alive"}' \
               "$INSERT_URL")
             CURL_EXIT=$?
             set -e
@@ -78,7 +78,7 @@ jobs:
 
             # 2. Perform Cleanup (DELETE) Operation (Older than 7 days)
             SEVEN_DAYS_AGO=$(date -u -d "7 days ago" +%Y-%m-%dT%H:%M:%SZ)
-            DELETE_URL="${URL%/}/rest/v1/log_activity?tournaments_nama=eq.SYSTEM_WAKEUP&timestamp=lt.${SEVEN_DAYS_AGO}"
+            DELETE_URL="${URL%/}/rest/v1/log_activity?activity_name=eq.SYSTEM_WAKEUP&timestamp=lt.${SEVEN_DAYS_AGO}"
             echo "📡 Performing database cleanup (DELETE logs older than 7 days) via: $DELETE_URL"
 
             set +e

@@ -363,7 +363,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- 8. Table for keep-alive logs (log_activity)
 CREATE TABLE IF NOT EXISTS public.log_activity (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tournaments_nama TEXT DEFAULT 'SYSTEM_WAKEUP',
+    activity_name TEXT DEFAULT 'SYSTEM_WAKEUP',
     deskripsi TEXT,
     timestamp TIMESTAMPTZ DEFAULT now()
 );
